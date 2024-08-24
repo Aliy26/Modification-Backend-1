@@ -11,6 +11,7 @@ const likesSchema = new Schema(
     memberId: {
       type: Schema.Types.ObjectId,
       required: true,
+      ref: "Member",
     },
 
     likeRefId: {

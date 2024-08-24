@@ -36,6 +36,13 @@ routerAdmin.post(
   makeUploader("products").array("productImages", 5),
   productController.createNewProduct
 );
+
+routerAdmin.post(
+  "/product/delete/:id",
+  restaurantController.verifyRestaurant,
+  productController.deleteProduct
+);
+
 routerAdmin.post(
   "/product/:id",
   restaurantController.verifyRestaurant,

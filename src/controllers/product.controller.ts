@@ -42,7 +42,7 @@ productController.getProduct = async (req: ExtendedRequest, res: Response) => {
     console.log("getProduct");
 
     const { id } = req.params;
-    console.log(id);
+
     const memberId = req.member?._id ?? null,
       result = await productService.getProduct(memberId, id);
 
@@ -57,10 +57,10 @@ productController.getProduct = async (req: ExtendedRequest, res: Response) => {
 productController.likeProduct = async (req: ExtendedRequest, res: Response) => {
   try {
     console.log("likeProduct");
-    const memberId = req.member?._id ?? null;
-    const productId = req.params.id;
-    console.log(memberId, productId);
-    const result = await productService.likeProduct(memberId, productId);
+
+    const { id } = req.params;
+    const memberId = req.member._id,
+      result = await productService.likeProduct(memberId, id);
     res.status(HttpCode.OK).json(result);
   } catch (err) {
     console.log("Error, likeProduct", err);
@@ -104,6 +104,22 @@ productController.createNewProduct = async (
       `<script> alert("Successfully created!"); window.location.replace("/admin/product/all") </script>`
     );
   } catch (err) {
+    const message =
+      err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
+    res.send(
+      `<script> alert("${message}"); window.location.replace("/admin/product/all") </script>`
+    );
+  }
+};
+
+productController.deleteProduct = async (req: Request, res: Response) => {
+  try {
+    console.log("deleteProduct");
+    const id = req.params.id;
+    await productService.deleteProduct(id);
+    res.status(HttpCode.OK).json("Successful deletion!");
+  } catch (err) {
+    console.log("Error, deleteProduct", err);
     const message =
       err instanceof Errors ? err.message : Message.SOMETHING_WENT_WRONG;
     res.send(

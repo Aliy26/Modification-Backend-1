@@ -2,22 +2,34 @@ import Errors, { HttpCode, Message } from "../libs/Errors";
 import { Like, LikeInput } from "../libs/types/likes";
 import LikeModel from "../schema/Likes";
 
-class LikesService {
+class LikeService {
   private readonly likeModel;
 
   constructor() {
     this.likeModel = LikeModel;
   }
 
-  public async checkIfLikes(input: LikeInput): Promise<Like> {
+  public async checkLike(input: LikeInput): Promise<Like> {
     return await this.likeModel
-      .findOne({ memberId: input.memberId, productId: input.likeRefId })
+      .findOne({
+        memberId: input.memberId,
+        likeRefId: input.likeRefId,
+      })
+      .exec();
+  }
+  public async deleteLike(input: LikeInput): Promise<void> {
+    console.log("deleteLike");
+    await this.likeModel
+      .findOneAndDelete({
+        memberId: input.memberId,
+        likeRefId: input.likeRefId,
+      })
       .exec();
   }
 
-  public async regMemberLike(input: LikeInput): Promise<void> {
+  public async regMemberLike(input: LikeInput): Promise<Like> {
     try {
-      await this.likeModel.create(input);
+      return await this.likeModel.create(input);
     } catch (err) {
       console.log("Error, regMemberLike", err);
       throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
@@ -25,4 +37,4 @@ class LikesService {
   }
 }
 
-export default LikesService;
+export default LikeService;

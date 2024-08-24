@@ -13,18 +13,19 @@ import { ObjectId } from "mongoose";
 import ViewService from "./View.service";
 import { ViewInput } from "../libs/types/view";
 import { ViewGroup } from "../libs/enums/view.enum";
-import LikesService from "./Likes.service";
+import LikeService from "./Likes.service";
 import { LikeGroup } from "../libs/enums/likes";
+import { LikeInput } from "../libs/types/likes";
 
 class ProductService {
   private readonly productModel;
   public viewService;
-  private readonly likesService;
+  private readonly likeService;
 
   constructor() {
     this.productModel = ProductModel;
     this.viewService = new ViewService();
-    this.likesService = new LikesService();
+    this.likeService = new LikeService();
   }
 
   /**  SPA */
@@ -95,39 +96,47 @@ class ProductService {
     return result;
   }
 
-  public async likeProduct(
-    memberId: ObjectId | null,
-    id: string
-  ): Promise<Product> {
+  public async likeProduct(memberId: ObjectId, id: string): Promise<Product> {
     const productId = shapeIntoMongooseObjectID(id);
-    let result = this.productModel
+    let result = await this.productModel
       .findOne({
         _id: productId,
         productStatus: ProductStatus.PROCESS,
       })
       .exec();
+
     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
 
-    if (memberId) {
-      const input = {
-        memberId: memberId,
-        likeRefId: productId,
-        likeGroup: LikeGroup.PRODUCT,
-      };
+    const input: LikeInput = {
+      memberId: memberId,
+      likeRefId: productId,
+      likeGroup: LikeGroup.PRODUCT,
+    };
 
-      const existLike = await this.likesService.checkIfLikes(input);
+    const existLike = await this.likeService.checkLike(input);
 
-      if (!existLike) {
-        await this.likesService.regMemberLike(input);
-        result = await this.productModel
-          .findOneAndUpdate(
-            productId,
-            { $inc: { productLikes: +1 } },
-            { new: true }
-          )
-          .exec();
-      }
+    if (existLike) {
+      result = await this.productModel
+        .findOneAndUpdate(
+          productId,
+          { $inc: { productLikes: -1 } },
+          { new: true }
+        )
+        .exec();
+
+      await this.likeService.deleteLike(input);
+    } else {
+      await this.likeService.regMemberLike(input);
+
+      result = await this.productModel
+        .findByIdAndUpdate(
+          { _id: productId },
+          { $inc: { productLikes: +1 } },
+          { new: true }
+        )
+        .exec();
     }
+
     return result;
   }
 
@@ -147,6 +156,12 @@ class ProductService {
       console.log("Error, model:createNewProduct:", err);
       throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
     }
+  }
+
+  public async deleteProduct(input: string): Promise<void> {
+    input = shapeIntoMongooseObjectID(input);
+    const result = await this.productModel.findByIdAndDelete(input).exec();
+    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
   }
 
   public async updateChosenProduct(
