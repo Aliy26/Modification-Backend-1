@@ -1,6 +1,6 @@
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import { Like, LikeInput } from "../libs/types/likes";
-import LikeModel from "../schema/Likes";
+import LikeModel from "../schema/Likes.model";
 
 class LikeService {
   private readonly likeModel;

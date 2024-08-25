@@ -6,7 +6,7 @@ import {
 } from "../libs/types/order";
 import { Member } from "../libs/types/member";
 import OrderModel from "../schema/Order.model";
-import OrderItem from "../schema/OrderItem";
+import OrderItem from "../schema/OrderItem.model";
 import { shapeIntoMongooseObjectID } from "../libs/config";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import { ObjectId } from "mongoose";
@@ -42,12 +42,11 @@ class OrderService {
       });
 
       const orderId = newOrder._id;
-      console.log("orderId", newOrder._id);
+
       await this.recordOrderItem(orderId, input);
 
       return newOrder;
     } catch (err) {
-      console.log("Error, model:createOrder:", err);
       throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
     }
   }
@@ -56,15 +55,15 @@ class OrderService {
     orderId: ObjectId,
     input: OrderItemInput[]
   ): Promise<void> {
-    const promisedList = input.map(async (item: OrderItemInput) => {
+    const itemsToInsert = input.map((item: OrderItemInput) => {
       item.orderId = orderId;
       item.productId = shapeIntoMongooseObjectID(item.productId);
-      await this.orderItemModel.create(item);
-      return "INSERTED";
+      return item;
     });
 
-    const orderItemsState = await Promise.all(promisedList);
-    console.log("orderItemState:", orderItemsState);
+    await this.orderItemModel.insertMany(itemsToInsert);
+
+    console.log("orderItemState: INSERTED");
   }
 
   public async getMyOrders(

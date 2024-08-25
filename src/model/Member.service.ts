@@ -11,12 +11,15 @@ import { HttpCode, Message } from "../libs/Errors";
 import { MemberStatus, MemberType } from "../libs/enums/member.enum";
 import * as bcrypt from "bcryptjs";
 import { shapeIntoMongooseObjectID } from "../libs/config";
+import DeleteService from "./Deletes.service";
 
 class MemberService {
   private readonly memberModel;
+  private readonly deleteService;
 
   constructor() {
     this.memberModel = MemberModel;
+    this.deleteService = new DeleteService();
   }
 
   //* SPA */
@@ -29,6 +32,7 @@ class MemberService {
     result.target = "Test";
 
     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
+
     return result;
   }
 
@@ -39,7 +43,6 @@ class MemberService {
     try {
       const result = await this.memberModel.create(input);
       result.memberPassword = "";
-
       return result.toJSON();
     } catch (err) {
       console.error("Error, model:signup", err);
@@ -132,6 +135,7 @@ class MemberService {
         memberNick: input.memberNick,
       })
       .select("+memberPassword")
+      .lean()
       .exec();
 
     if (!member) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
@@ -141,6 +145,8 @@ class MemberService {
       member.memberPassword
     );
     if (!isMatch) throw new Errors(HttpCode.FORBIDDEN, Message.WRONG_PASSWROD);
+
+    await this.deleteService.deletedMember(member);
 
     await this.memberModel
       .findOneAndDelete({ memberNick: input.memberNick })
