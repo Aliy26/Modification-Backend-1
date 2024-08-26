@@ -1,10 +1,8 @@
 import mongoose, { Schema } from "mongoose";
 import { MemberType } from "../libs/enums/member.enum";
 
-// DeletedMember Schema
 const deletedMemberSchema = new Schema(
   {
-    // Mirror fields from the Member schema
     memberType: {
       type: String,
       enum: MemberType,
@@ -50,7 +48,7 @@ const deletedMemberSchema = new Schema(
       default: Date.now,
     },
   },
-  { timestamps: true }
+  { timestamps: true, collection: "deletedMembers" }
 );
 
 export default mongoose.model("DeletedMember", deletedMemberSchema);

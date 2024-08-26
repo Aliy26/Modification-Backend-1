@@ -23,5 +23,6 @@ const viewSchema = new Schema(
 );
 
 viewSchema.index({ createdAt: 1 }, { expires: "6h" });
+viewSchema.index({ memberId: 1, viewRefId: 1 }, { unique: true });
 
 export default mongoose.model("View", viewSchema);

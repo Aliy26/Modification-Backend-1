@@ -9,6 +9,7 @@ class DeleteService {
   }
   public async deletedMember(member: Member): Promise<Member> {
     member.memberStatus = MemberStatus.DELETE;
+    delete member.memberPassword;
     return await this.deleteModel.create(member);
   }
 }

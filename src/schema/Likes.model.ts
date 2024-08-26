@@ -22,4 +22,6 @@ const likesSchema = new Schema(
   { timestamps: true }
 );
 
+likesSchema.index({ memberId: 1, likeRefId: 1 }, { unique: true });
+
 export default mongoose.model("Like", likesSchema);
