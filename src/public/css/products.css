@@ -365,3 +365,26 @@ table th {
 .products-container .slider.round:before {
   border-radius: 50%;
 }
+
+.remove-button {
+  border-radius: 4px;
+  border: 1px solid rgb(212, 208, 208);
+  color: rgb(26, 24, 24);
+  font-size: 17px;
+  background-color: #fff;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.table-input {
+  border: none;
+  text-align: center;
+}
+
+.flex-td {
+  text-align: center;
+}
+
+.price-table {
+  text-align: center;
+}

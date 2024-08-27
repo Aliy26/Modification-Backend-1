@@ -41,19 +41,20 @@
                 <th scope="col">Product Price</th>
                 <th scope="col">Product Left Count</th>
                 <th scope="col">Status</th>
+                <th scope="col">Remvoe Item</th>
               </tr>
             </thead>
             <% products.map((product, index) => { %>
-            <tbody style="background: white">
+            <tbody style="background: white" class="tbodyy">
               <td><%= index + 1 %></td>
-              <td><%= product.productName %></td>
+              <td class="flex-td"><input class="table-input name-input" id="<%= product._id %> " type="text" value="<%= product.productName %>"></td>
               <td><%= product.productCollection %></td>
               <td>
                 <%= product.productCollection === "DRINK" ?
                 product.productVolume : product.productSize %>
               </td>
-              <td><%= product.productPrice %></td>
-              <td><%= product.productLeftCount %></td>
+              <td class="flex-td"><input type="text" class="table-input price-input" value="<%= product.productPrice %>" id="<%= product._id %>"></td>
+              <td class="price-table"><input type="text" class="table-input count-input" value="<%= product.productLeftCount %>" id="<%= product._id %>"></td>
            
               <td>
                 <select
@@ -65,6 +66,10 @@
                   <option value="DELETE" <%= product.productStatus === "DELETE" ? "selected": "" %> >DELETE</option>
                 </select>
               </td>
+              <td>
+                <button type="button" class="btn-primary remove-button" id="<%= product._id %>">remove</button>
+              </td>
+
             </tbody>
             <% }) %>
           </table>

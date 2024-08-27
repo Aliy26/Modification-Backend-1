@@ -21,6 +21,78 @@ $(function () {
     $(".dish-container").slideToggle(100);
     $("#process-btn").css("display", "flex");
   });
+
+  // confirm(`Do you want to change the name of the item to ${e.target.value}?`);
+
+  $(".remove-button").on("click", async (e) => {
+    const id = e.target.id;
+    confirm("Do you want to remove the item?");
+    try {
+      await axios.post(`/admin/product/delete/${id}`);
+      $(e.target).closest("tbody").remove();
+
+      // alert("Successfully deleted!");
+    } catch (err) {
+      console.log(err);
+      alert("Product deletion failed!");
+    }
+  });
+
+  $(".name-input").on("change", async (e) => {
+    const id = e.target.id;
+    const input = e.target.value;
+    try {
+      const response = await axios.post(`/admin/product/${id}`, {
+        productName: input,
+      });
+      const result = response.data;
+      if (result.data) {
+        console.log("Product updated!");
+      }
+    } catch (err) {
+      console.log(err);
+      alert("Product update failed!");
+    }
+  });
+
+  $(".price-input").on("change", async (e) => {
+    const id = e.target.id;
+    console.log(id);
+    const input = e.target.value;
+    console.log(input);
+    try {
+      const response = await axios.post(`/admin/product/${id}`, {
+        productPrice: input,
+      });
+      const result = response.data;
+      if (result.data) {
+        console.log("Product updated!");
+      }
+    } catch (err) {
+      console.log(err);
+      alert("Product update failed!");
+    }
+  });
+
+  $(".count-input").on("change", async (e) => {
+    const id = e.target.id;
+    console.log(id);
+    const input = e.target.value;
+    console.log(input);
+    try {
+      const response = await axios.post(`/admin/product/${id}`, {
+        productLeftCount: input,
+      });
+      const result = response.data;
+      if (result.data) {
+        console.log("Product updated!");
+      }
+    } catch (err) {
+      console.log(err);
+      alert("Product update failed!");
+    }
+  });
+
   $(".new-product-status").on("change", async function (e) {
     const id = e.target.id,
       productStatus = $(`#${id}.new-product-status`).val();
@@ -33,11 +105,12 @@ $(function () {
       const result = response.data;
       if (result.data) {
         console.log("Product updated!");
+        console.log(result.data);
         $(".new-product-status").blur();
       } else alert("Product update failed!");
     } catch (err) {
       console.log(err);
-      alert("Product update failed");
+      alert("Product update failed!");
     }
   });
 });
