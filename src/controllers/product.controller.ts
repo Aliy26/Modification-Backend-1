@@ -118,9 +118,8 @@ productController.deleteProduct = async (req: Request, res: Response) => {
     const id = req.params.id;
     console.log(id);
     await productService.deleteProduct(id);
-    res.send(
-      `<script> alert("Successfully deleted!"); window.location.replace("/admin/product/all") </script>`
-    );
+
+    res.send("done");
   } catch (err) {
     console.log("Error, deleteProduct", err);
     const message =

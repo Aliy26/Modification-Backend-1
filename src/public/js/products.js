@@ -22,16 +22,17 @@ $(function () {
     $("#process-btn").css("display", "flex");
   });
 
-  // confirm(`Do you want to change the name of the item to ${e.target.value}?`);
+  const confirmation = (str) =>
+    str ? confirm(`Do you want to change the item ${str}?`) : null;
 
   $(".remove-button").on("click", async (e) => {
     const id = e.target.id;
-    confirm("Do you want to remove the item?");
-    try {
+
+    if (confirm("Do you want to remove the item?")) {
       await axios.post(`/admin/product/delete/${id}`);
       $(e.target).closest("tbody").remove();
-
-      // alert("Successfully deleted!");
+    }
+    try {
     } catch (err) {
       console.log(err);
       alert("Product deletion failed!");
@@ -42,12 +43,14 @@ $(function () {
     const id = e.target.id;
     const input = e.target.value;
     try {
-      const response = await axios.post(`/admin/product/${id}`, {
-        productName: input,
-      });
-      const result = response.data;
-      if (result.data) {
-        console.log("Product updated!");
+      if (confirmation("name")) {
+        const response = await axios.post(`/admin/product/${id}`, {
+          productName: input,
+        });
+        const result = response.data;
+        if (result.data) {
+          console.log("Product updated!");
+        }
       }
     } catch (err) {
       console.log(err);
@@ -57,16 +60,18 @@ $(function () {
 
   $(".price-input").on("change", async (e) => {
     const id = e.target.id;
-    console.log(id);
+
     const input = e.target.value;
-    console.log(input);
+
     try {
-      const response = await axios.post(`/admin/product/${id}`, {
-        productPrice: input,
-      });
-      const result = response.data;
-      if (result.data) {
-        console.log("Product updated!");
+      if (confirmation("price")) {
+        const response = await axios.post(`/admin/product/${id}`, {
+          productPrice: input,
+        });
+        const result = response.data;
+        if (result.data) {
+          console.log("Product updated!");
+        }
       }
     } catch (err) {
       console.log(err);
@@ -80,12 +85,14 @@ $(function () {
     const input = e.target.value;
     console.log(input);
     try {
-      const response = await axios.post(`/admin/product/${id}`, {
-        productLeftCount: input,
-      });
-      const result = response.data;
-      if (result.data) {
-        console.log("Product updated!");
+      if (confirmation("count")) {
+        const response = await axios.post(`/admin/product/${id}`, {
+          productLeftCount: input,
+        });
+        const result = response.data;
+        if (result.data) {
+          console.log("Product updated!");
+        }
       }
     } catch (err) {
       console.log(err);
@@ -105,7 +112,6 @@ $(function () {
       const result = response.data;
       if (result.data) {
         console.log("Product updated!");
-        console.log(result.data);
         $(".new-product-status").blur();
       } else alert("Product update failed!");
     } catch (err) {
