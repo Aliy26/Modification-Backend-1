@@ -112,13 +112,15 @@ productController.createNewProduct = async (
   }
 };
 
-productController.deleteProduct = async (req: Request, res: Response) => {
+productController.deleteProduct = async (
+  req: ExtendedRequest,
+  res: Response
+) => {
   try {
     console.log("deleteProduct");
     const id = req.params.id;
-    console.log(id);
-    await productService.deleteProduct(id);
 
+    await productService.deleteProduct(id);
     res.send("done");
   } catch (err) {
     console.log("Error, deleteProduct", err);
@@ -134,8 +136,6 @@ productController.updateChosenProduct = async (req: Request, res: Response) => {
   try {
     console.log("updateChosenProduct");
     const id = req.params.id;
-    console.log("id:", id);
-    console.log(req.body);
     const result = await productService.updateChosenProduct(id, req.body);
     res.status(HttpCode.OK).json({ data: result });
   } catch (err) {

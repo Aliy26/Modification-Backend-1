@@ -1,11 +1,11 @@
 import { MemberStatus } from "../libs/enums/member.enum";
 import { Member } from "../libs/types/member";
-import DeletedsModel from "../schema/Deleteds.model";
+import DeletedModel from "../schema/Deleted.model";
 
 class DeleteService {
   private readonly deleteModel;
   constructor() {
-    this.deleteModel = DeletedsModel;
+    this.deleteModel = DeletedModel;
   }
   public async deletedMember(member: Member): Promise<Member> {
     member.memberStatus = MemberStatus.DELETE;

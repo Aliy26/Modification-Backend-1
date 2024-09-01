@@ -158,12 +158,6 @@ class ProductService {
     }
   }
 
-  public async deleteProduct(input: string): Promise<void> {
-    input = shapeIntoMongooseObjectID(input);
-    const result = await this.productModel.findByIdAndDelete(input).exec();
-    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
-  }
-
   public async updateChosenProduct(
     id: string,
     input: ProductUpdateInput
@@ -175,6 +169,12 @@ class ProductService {
     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.UPDATE_FAILED);
 
     return result;
+  }
+
+  public async deleteProduct(input: string): Promise<void> {
+    input = shapeIntoMongooseObjectID(input);
+    const result = await this.productModel.findByIdAndDelete(input).exec();
+    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
   }
 }
 
