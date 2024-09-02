@@ -12,16 +12,19 @@ import Errors, { HttpCode, Message } from "../libs/Errors";
 import { ObjectId } from "mongoose";
 import MemberService from "./Member.service";
 import { OrderStatus } from "../libs/enums/order.enum";
+import ProductService from "./Product.service";
 
 class OrderService {
   private readonly orderModel;
   private readonly orderItemModel;
   private readonly memberService;
+  private readonly productService;
 
   constructor() {
     this.orderModel = OrderModel;
     this.orderItemModel = OrderItem;
     this.memberService = new MemberService();
+    this.productService = new ProductService();
   }
 
   public async createOrder(
@@ -42,8 +45,15 @@ class OrderService {
       });
 
       const orderId = newOrder._id;
-
       await this.recordOrderItem(orderId, input);
+
+      const arrOfIds = input.map((ele) => {
+        return {
+          _id: shapeIntoMongooseObjectID(ele.productId),
+          count: -ele.itemQuantity,
+        };
+      });
+      await this.productService.modifyCount(arrOfIds);
 
       return newOrder;
     } catch (err) {
@@ -62,6 +72,7 @@ class OrderService {
     });
 
     await this.orderItemModel.insertMany(itemsToInsert);
+    console.log();
 
     console.log("orderItemState: INSERTED");
   }
@@ -119,7 +130,17 @@ class OrderService {
         { new: true }
       )
       .exec();
-
+    const orders = await this.orderItemModel.find({ orderId: orderId });
+    console.log(">>>>>>>>>", orders);
+    const arrOfIds = orders.map((ele) => {
+      return {
+        _id: shapeIntoMongooseObjectID(ele.productId),
+        count: ele.itemQuantity,
+      };
+    });
+    console.log(">>>>>,<<<<<<<", arrOfIds);
+    await this.productService.modifyCount(arrOfIds);
+    // console.log("length>>>>", orders.length);
     if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
 
     if (orderStatus === OrderStatus.PROCESS) {

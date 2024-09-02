@@ -55,3 +55,8 @@ export interface ProductUpdateInput {
   productImages?: string[];
   productViews?: number;
 }
+
+export interface ModifyCount {
+  _id: ObjectId;
+  count: number;
+}

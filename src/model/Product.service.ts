@@ -2,6 +2,7 @@ import { T } from "../libs/types/common";
 import { shapeIntoMongooseObjectID } from "../libs/config";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import {
+  ModifyCount,
   Product,
   ProductInput,
   ProductInquiry,
@@ -94,6 +95,17 @@ class ProductService {
     }
 
     return result;
+  }
+
+  public async modifyCount(input: ModifyCount[]): Promise<void> {
+    const updatePromises = input.map(
+      async (item) =>
+        await this.productModel.findByIdAndUpdate(item._id, {
+          $inc: { productLeftCount: -item.count },
+        })
+    );
+
+    await Promise.allSettled(updatePromises);
   }
 
   public async likeProduct(memberId: ObjectId, id: string): Promise<Product> {
