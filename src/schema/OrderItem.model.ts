@@ -25,4 +25,6 @@ const orderItemSchema = new Schema(
   }
 );
 
+orderItemSchema.index({ createdAt: 1 }, { expires: "24h" });
+
 export default mongoose.model("OrderItem", orderItemSchema);

@@ -10,7 +10,7 @@ import Errors from "../libs/Errors";
 import { HttpCode, Message } from "../libs/Errors";
 import { MemberStatus, MemberType } from "../libs/enums/member.enum";
 import * as bcrypt from "bcryptjs";
-import { shapeIntoMongooseObjectID } from "../libs/config";
+import { shapeIntoMongooseObjectId } from "../libs/config";
 import DeleteService from "./Deletes.service";
 
 class MemberService {
@@ -77,7 +77,7 @@ class MemberService {
   }
 
   public async getMemberDetail(member: Member): Promise<Member> {
-    const memberId = shapeIntoMongooseObjectID(member._id);
+    const memberId = shapeIntoMongooseObjectId(member._id);
     const result = await this.memberModel
       .findOne({ _id: memberId, memberStatus: MemberStatus.ACTIVE })
       .exec();
@@ -120,7 +120,7 @@ class MemberService {
     member: Member,
     input: MemberUpdateInput
   ): Promise<Member> {
-    const memberId = shapeIntoMongooseObjectID(member._id);
+    const memberId = shapeIntoMongooseObjectId(member._id);
     const result = this.memberModel
       .findOneAndUpdate({ _id: memberId }, input, { new: true })
       .exec();
@@ -168,7 +168,7 @@ class MemberService {
   }
 
   public async addUserPoint(member: Member, point: number): Promise<Member> {
-    const memberId = shapeIntoMongooseObjectID(member._id);
+    const memberId = shapeIntoMongooseObjectId(member._id);
 
     return await this.memberModel
       .findOneAndUpdate(
@@ -235,7 +235,7 @@ class MemberService {
   }
 
   public async updateChosenUser(input: MemberUpdateInput): Promise<Member> {
-    input._id = shapeIntoMongooseObjectID(input._id);
+    input._id = shapeIntoMongooseObjectId(input._id);
     const result = await this.memberModel
       .findByIdAndUpdate({ _id: input._id }, input, { new: true })
       .exec();

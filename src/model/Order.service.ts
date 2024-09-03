@@ -7,7 +7,7 @@ import {
 import { Member } from "../libs/types/member";
 import OrderModel from "../schema/Order.model";
 import OrderItem from "../schema/OrderItem.model";
-import { shapeIntoMongooseObjectID } from "../libs/config";
+import { shapeIntoMongooseObjectId } from "../libs/config";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import { ObjectId } from "mongoose";
 import MemberService from "./Member.service";
@@ -31,7 +31,7 @@ class OrderService {
     member: Member,
     input: OrderItemInput[]
   ): Promise<Order> {
-    const memberId = shapeIntoMongooseObjectID(member._id);
+    const memberId = shapeIntoMongooseObjectId(member._id);
     const amount = input.reduce((accumulator: number, item: OrderItemInput) => {
       return accumulator + item.itemPrice * item.itemQuantity;
     }, 0);
@@ -49,7 +49,7 @@ class OrderService {
 
       const arrOfIds = input.map((ele) => {
         return {
-          _id: shapeIntoMongooseObjectID(ele.productId),
+          _id: shapeIntoMongooseObjectId(ele.productId),
           count: -ele.itemQuantity,
         };
       });
@@ -67,7 +67,7 @@ class OrderService {
   ): Promise<void> {
     const itemsToInsert = input.map((item: OrderItemInput) => {
       item.orderId = orderId;
-      item.productId = shapeIntoMongooseObjectID(item.productId);
+      item.productId = shapeIntoMongooseObjectId(item.productId);
       return item;
     });
 
@@ -81,7 +81,7 @@ class OrderService {
     member: Member,
     inquiry: OrderInquiry
   ): Promise<Order[]> {
-    const memberId = shapeIntoMongooseObjectID(member._id);
+    const memberId = shapeIntoMongooseObjectId(member._id);
     const matches = { memberId: memberId, orderStatus: inquiry.orderStatus };
 
     const result = await this.orderModel.aggregate([
@@ -116,8 +116,8 @@ class OrderService {
     member: Member,
     input: OrderUpdateInput
   ): Promise<Order> {
-    const memberId = shapeIntoMongooseObjectID(member._id);
-    const orderId = shapeIntoMongooseObjectID(input.orderId),
+    const memberId = shapeIntoMongooseObjectId(member._id);
+    const orderId = shapeIntoMongooseObjectId(input.orderId),
       orderStatus = input.orderStatus;
 
     const result = await this.orderModel
@@ -131,16 +131,16 @@ class OrderService {
       )
       .exec();
     const orders = await this.orderItemModel.find({ orderId: orderId });
-    console.log(">>>>>>>>>", orders);
+
     const arrOfIds = orders.map((ele) => {
       return {
-        _id: shapeIntoMongooseObjectID(ele.productId),
+        _id: shapeIntoMongooseObjectId(ele.productId),
         count: ele.itemQuantity,
       };
     });
-    console.log(">>>>>,<<<<<<<", arrOfIds);
+
     await this.productService.modifyCount(arrOfIds);
-    // console.log("length>>>>", orders.length);
+
     if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
 
     if (orderStatus === OrderStatus.PROCESS) {

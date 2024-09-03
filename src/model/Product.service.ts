@@ -1,5 +1,5 @@
 import { T } from "../libs/types/common";
-import { shapeIntoMongooseObjectID } from "../libs/config";
+import { shapeIntoMongooseObjectId } from "../libs/config";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import {
   ModifyCount,
@@ -62,7 +62,7 @@ class ProductService {
     memberId: ObjectId | null,
     id: string
   ): Promise<Product> {
-    const productId = shapeIntoMongooseObjectID(id);
+    const productId = shapeIntoMongooseObjectId(id);
     let result = await this.productModel
       .findOne({ _id: productId, productStatus: ProductStatus.PROCESS })
       .exec();
@@ -98,18 +98,17 @@ class ProductService {
   }
 
   public async modifyCount(input: ModifyCount[]): Promise<void> {
-    const updatePromises = input.map(
-      async (item) =>
-        await this.productModel.findByIdAndUpdate(item._id, {
-          $inc: { productLeftCount: -item.count },
-        })
+    const updatePromises = input.map((item) =>
+      this.productModel.findByIdAndUpdate(item._id, {
+        $inc: { productLeftCount: item.count },
+      })
     );
 
-    await Promise.allSettled(updatePromises);
+    const result = await Promise.allSettled(updatePromises);
   }
 
   public async likeProduct(memberId: ObjectId, id: string): Promise<Product> {
-    const productId = shapeIntoMongooseObjectID(id);
+    const productId = shapeIntoMongooseObjectId(id);
     let result = await this.productModel
       .findOne({
         _id: productId,
@@ -174,7 +173,7 @@ class ProductService {
     id: string,
     input: ProductUpdateInput
   ): Promise<Product> {
-    id = shapeIntoMongooseObjectID(id);
+    id = shapeIntoMongooseObjectId(id);
     const result = await this.productModel
       .findOneAndUpdate({ _id: id }, input, { new: true })
       .exec();
@@ -184,7 +183,7 @@ class ProductService {
   }
 
   public async deleteProduct(input: string): Promise<void> {
-    input = shapeIntoMongooseObjectID(input);
+    input = shapeIntoMongooseObjectId(input);
     const result = await this.productModel.findByIdAndDelete(input).exec();
     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
   }
