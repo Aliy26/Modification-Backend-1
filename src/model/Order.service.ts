@@ -130,16 +130,19 @@ class OrderService {
         { new: true }
       )
       .exec();
-    const orders = await this.orderItemModel.find({ orderId: orderId });
+    console.log("========", result.orderStatus);
 
-    const arrOfIds = orders.map((ele) => {
-      return {
-        _id: shapeIntoMongooseObjectId(ele.productId),
-        count: ele.itemQuantity,
-      };
-    });
+    if (result.orderStatus === OrderStatus.DELETE) {
+      const orders = await this.orderItemModel.find({ orderId: orderId });
+      const arrOfIds = orders.map((ele) => {
+        return {
+          _id: shapeIntoMongooseObjectId(ele.productId),
+          count: ele.itemQuantity,
+        };
+      });
 
-    await this.productService.modifyCount(arrOfIds);
+      await this.productService.modifyCount(arrOfIds);
+    }
 
     if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
 

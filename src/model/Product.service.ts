@@ -104,7 +104,7 @@ class ProductService {
       })
     );
 
-    const result = await Promise.allSettled(updatePromises);
+    await Promise.allSettled(updatePromises);
   }
 
   public async likeProduct(memberId: ObjectId, id: string): Promise<Product> {
