@@ -1,6 +1,7 @@
 import {
   Order,
   OrderInquiry,
+  OrderItems,
   OrderItemInput,
   OrderUpdateInput,
 } from "../libs/types/order";
@@ -72,7 +73,6 @@ class OrderService {
     });
 
     await this.orderItemModel.insertMany(itemsToInsert);
-    console.log();
 
     console.log("orderItemState: INSERTED");
   }
@@ -134,7 +134,7 @@ class OrderService {
 
     if (result.orderStatus === OrderStatus.DELETE) {
       const orders = await this.orderItemModel.find({ orderId: orderId });
-      const arrOfIds = orders.map((ele) => {
+      const arrOfIds = orders.map((ele: OrderItems) => {
         return {
           _id: shapeIntoMongooseObjectId(ele.productId),
           count: ele.itemQuantity,
@@ -151,6 +151,44 @@ class OrderService {
     }
 
     return result;
+  }
+
+  public async cancelOverdueOrders(): Promise<void> {
+    const oneDay = new Date(Date.now() - 1 * 60 * 1000);
+    try {
+      const overdueOrders: Order[] = await this.orderModel.find({
+        orderStatus: OrderStatus.PAUSE,
+        createdAt: { $lt: oneDay },
+      });
+
+      await Promise.all(
+        overdueOrders.map((order) => this.cancelOrder(order._id))
+      );
+    } catch (err) {
+      console.error("Error, cancelOverdueOrders", err);
+    }
+  }
+
+  public async cancelOrder(orderId: ObjectId): Promise<void> {
+    try {
+      const orderItems: OrderItems[] = await this.orderItemModel.find({
+        orderId,
+      });
+      const modifyCountInput = orderItems.map((item) => ({
+        _id: item.productId,
+        count: item.itemQuantity,
+      }));
+
+      await this.productService.modifyCount(modifyCountInput);
+
+      await this.orderModel.findByIdAndUpdate(orderId, {
+        orderStatus: OrderStatus.DELETE,
+      });
+
+      console.log(`Order ${orderId} cancelled successfully`);
+    } catch (err) {
+      console.error("Error, cancelOrder", err);
+    }
   }
 }
 
