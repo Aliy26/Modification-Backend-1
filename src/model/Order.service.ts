@@ -48,14 +48,6 @@ class OrderService {
       const orderId = newOrder._id;
       await this.recordOrderItem(orderId, input);
 
-      const arrOfIds = input.map((ele) => {
-        return {
-          _id: shapeIntoMongooseObjectId(ele.productId),
-          count: -ele.itemQuantity,
-        };
-      });
-      await this.productService.modifyCount(arrOfIds);
-
       return newOrder;
     } catch (err) {
       throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
@@ -132,16 +124,16 @@ class OrderService {
       .exec();
     console.log("========", result.orderStatus);
 
-    if (result.orderStatus === OrderStatus.DELETE) {
+    if (result.orderStatus === OrderStatus.PROCESS) {
       const orders = await this.orderItemModel.find({ orderId: orderId });
-      const arrOfIds = orders.map((ele: OrderItems) => {
+      const modifyCountInput = orders.map((ele: OrderItems) => {
         return {
           _id: shapeIntoMongooseObjectId(ele.productId),
-          count: ele.itemQuantity,
+          count: -ele.itemQuantity,
         };
       });
 
-      await this.productService.modifyCount(arrOfIds);
+      await this.productService.modifyCount(modifyCountInput);
     }
 
     if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
@@ -154,42 +146,63 @@ class OrderService {
   }
 
   public async cancelOverdueOrders(): Promise<void> {
-    const oneDay = new Date(Date.now() - 1 * 60 * 1000);
     try {
-      const overdueOrders: Order[] = await this.orderModel.find({
-        orderStatus: OrderStatus.PAUSE,
-        createdAt: { $lt: oneDay },
-      });
-
-      await Promise.all(
-        overdueOrders.map((order) => this.cancelOrder(order._id))
-      );
+      const result: Order[] = await this.orderModel
+        .find({
+          orderStatus: OrderStatus.DELETE,
+        })
+        .exec();
+      if (result.length > 1) {
+        const orderIds = result.map((ele: Order) => {
+          return ele._id;
+        });
+        console.log(`deleted ${result.length} cancelled orders`);
+        await this.orderModel.deleteMany({ _id: { $in: orderIds } }).exec();
+        await this.orderItemModel.deleteMany({ orderId: { $in: orderIds } });
+      } else {
+        console.log("no cancelled orders, everything is clean");
+      }
     } catch (err) {
-      console.error("Error, cancelOverdueOrders", err);
-    }
-  }
-
-  public async cancelOrder(orderId: ObjectId): Promise<void> {
-    try {
-      const orderItems: OrderItems[] = await this.orderItemModel.find({
-        orderId,
-      });
-      const modifyCountInput = orderItems.map((item) => ({
-        _id: item.productId,
-        count: item.itemQuantity,
-      }));
-
-      await this.productService.modifyCount(modifyCountInput);
-
-      await this.orderModel.findByIdAndUpdate(orderId, {
-        orderStatus: OrderStatus.DELETE,
-      });
-
-      console.log(`Order ${orderId} cancelled successfully`);
-    } catch (err) {
-      console.error("Error, cancelOrder", err);
+      console.log("Error, cancelOverdueOrders", err);
     }
   }
 }
 
 export default OrderService;
+
+// public async cancelOverdueOrders(): Promise<void> {
+//   const oneDay = new Date(Date.now() - 60 * 60 * 24 * 1000);
+//   try {
+//     const overdueOrders: Order[] = await this.orderModel.find({
+//       orderStatus: OrderStatus.PAUSE,
+//       createdAt: { $lt: oneDay },
+//     });
+
+//     await Promise.all(
+//       overdueOrders.map((order) => this.cancelOrder(order._id))
+//     );
+//   } catch (err) {
+//     console.error("Error, cancelOverdueOrders", err);
+//   }
+// }
+
+// public async cancelOrder(orderId: ObjectId): Promise<void> {
+//   try {
+//     const orderItems: OrderItems[] = await this.orderItemModel.find({
+//       orderId,
+//     });
+//     const modifyCountInput = orderItems.map((item) => ({
+//       _id: item.productId,
+//       count: item.itemQuantity,
+//     }));
+
+//     await this.productService.modifyCount(modifyCountInput);
+
+//     await this.orderModel.findByIdAndUpdate(orderId, {
+//       orderStatus: OrderStatus.DELETE,
+//     });
+
+//     console.log(`Order ${orderId} cancelled successfully`);
+//   } catch (err) {
+//     console.error("Error, cancelOrder", err);
+//   }

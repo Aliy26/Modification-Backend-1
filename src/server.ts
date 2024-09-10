@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import mongoose from "mongoose";
 import app from "./app";
+import "./libs/cron";
 
 mongoose
   .connect(process.env.MONGO_URL as string, {})
