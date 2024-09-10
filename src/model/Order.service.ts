@@ -159,6 +159,7 @@ class OrderService {
         console.log(`deleted ${result.length} cancelled orders`);
         await this.orderModel.deleteMany({ _id: { $in: orderIds } }).exec();
         await this.orderItemModel.deleteMany({ orderId: { $in: orderIds } });
+        await this.orderItemModel.deleteMany({ orderId: { $in: orderIds } });
       } else {
         console.log("no cancelled orders, everything is clean");
       }

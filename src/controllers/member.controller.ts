@@ -131,8 +131,9 @@ memberController.deleteMember = async (req: ExtendedRequest, res: Response) => {
   try {
     console.log("deleteMember");
     const input: LoginInput = req.body;
-    await memberService.deleteMember(input);
-    res.status(HttpCode.OK).json("Successful Deletion!");
+    const memberNick: string = req.member.memberNick;
+    const result = await memberService.deleteMember(input, memberNick);
+    res.status(HttpCode.OK).json(result);
   } catch (err) {
     console.log("Error, deleteMember", err);
     if (err instanceof Errors) res.status(err.code).json(err);

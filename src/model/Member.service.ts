@@ -129,7 +129,12 @@ class MemberService {
     return result;
   }
 
-  public async deleteMember(input: LoginInput): Promise<void> {
+  public async deleteMember(
+    input: LoginInput,
+    memberNick: string
+  ): Promise<Member> {
+    if (input.memberNick !== memberNick)
+      throw new Errors(HttpCode.BAD_REQUEST, Message.DELETE_FAILED);
     const member = await this.memberModel
       .findOne({
         memberNick: input.memberNick,
@@ -151,6 +156,8 @@ class MemberService {
     await this.memberModel
       .findOneAndDelete({ memberNick: input.memberNick })
       .exec();
+
+    return member;
   }
 
   public async getTopUsers(): Promise<Member[]> {
