@@ -30,9 +30,9 @@ $(function () {
 
     if (confirm("Do you want to remove the item?")) {
       await axios.post(`/admin/product/delete/${id}`);
-      $(e.target).closest("tbody").remove();
     }
     try {
+      $(e.target).closest("tbody").remove();
     } catch (err) {
       console.log(err);
       alert("Product deletion failed!");

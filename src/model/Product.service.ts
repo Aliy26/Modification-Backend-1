@@ -124,9 +124,9 @@ class ProductService {
       likeGroup: LikeGroup.PRODUCT,
     };
 
-    const existLike = await this.likeService.checkLike(input);
+    const checkLike = await this.likeService.checkLike(input);
 
-    if (existLike) {
+    if (checkLike) {
       result = await this.productModel
         .findOneAndUpdate(
           productId,

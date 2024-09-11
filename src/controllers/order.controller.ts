@@ -5,6 +5,7 @@ import { Request, Response } from "express";
 import OrderService from "../model/Order.service";
 import { OrderInquiry, OrderUpdateInput } from "../libs/types/order";
 import { OrderStatus } from "../libs/enums/order.enum";
+import { sendOrderConfirmation } from "../libs/emailService";
 
 const orderService = new OrderService();
 
@@ -46,6 +47,17 @@ orderController.updateOrder = async (req: ExtendedRequest, res: Response) => {
     console.log("updateOrder");
     const input: OrderUpdateInput = req.body;
     const result = await orderService.updateOrder(req.member, input);
+    if (result.orderStatus === OrderStatus.PROCESS) {
+      try {
+        await sendOrderConfirmation({
+          to: req.member.memberEmail,
+          subject: " Order Confirmation",
+          html: `<h1>Dear ${req.member.memberNick}, Thank you for shopping at Gatorade.com</h1><p>Your order has been placed successfully!</p>`,
+        });
+      } catch (err) {
+        console.error("Failed to send order confirmation email:", err);
+      }
+    }
     res.status(HttpCode.OK).json(result);
   } catch (err) {
     console.log("updateOrder", err);

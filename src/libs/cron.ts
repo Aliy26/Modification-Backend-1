@@ -4,7 +4,7 @@ import OrderService from "../model/Order.service";
 const orderService = new OrderService();
 
 cron.schedule("0 * * * *", async () => {
-  console.log("Running cron job to cancel overdue orders every 10 minutes...");
+  console.log("Running cron job to cancel overdue orders every 60 minutes...");
   try {
     await orderService.cancelOverdueOrders();
   } catch (err) {

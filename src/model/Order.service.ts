@@ -122,7 +122,6 @@ class OrderService {
         { new: true }
       )
       .exec();
-    console.log("========", result.orderStatus);
 
     if (result.orderStatus === OrderStatus.PROCESS) {
       const orders = await this.orderItemModel.find({ orderId: orderId });
@@ -152,13 +151,12 @@ class OrderService {
           orderStatus: OrderStatus.DELETE,
         })
         .exec();
-      if (result.length > 1) {
+      if (result.length >= 1) {
         const orderIds = result.map((ele: Order) => {
           return ele._id;
         });
         console.log(`deleted ${result.length} cancelled orders`);
         await this.orderModel.deleteMany({ _id: { $in: orderIds } }).exec();
-        await this.orderItemModel.deleteMany({ orderId: { $in: orderIds } });
         await this.orderItemModel.deleteMany({ orderId: { $in: orderIds } });
       } else {
         console.log("no cancelled orders, everything is clean");

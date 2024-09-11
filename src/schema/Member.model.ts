@@ -35,6 +35,10 @@ const memberSchema = new Schema(
       required: true,
     },
 
+    memberEmail: {
+      type: String,
+    },
+
     memberAddress: {
       type: String,
     },
