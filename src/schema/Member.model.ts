@@ -37,6 +37,7 @@ const memberSchema = new Schema(
 
     memberEmail: {
       type: String,
+      required: true,
     },
 
     memberAddress: {

@@ -12,6 +12,7 @@ import {
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import AuthService from "../model/Auth.service";
 import { AUTH_TIMER } from "../libs/config";
+import validator from "validator";
 // REACT
 
 const memberService = new MemberService();
@@ -34,8 +35,13 @@ memberController.getRestaurant = async (req: Request, res: Response) => {
 memberController.signup = async (req: Request, res: Response) => {
   try {
     console.log("signup");
-    const input: MemberInput = req.body,
-      result: Member = await memberService.signup(input),
+    const input: MemberInput = req.body;
+    const email = req.body.memberEmail;
+    if (!validator.isEmail(email)) {
+      throw new Errors(HttpCode.BAD_REQUEST, Message.NOT_VALID_EMAIL);
+    }
+
+    const result: Member = await memberService.signup(input),
       token = await authService.createToken(result);
 
     res.cookie("accessToken", token, {
@@ -50,6 +56,8 @@ memberController.signup = async (req: Request, res: Response) => {
     else res.status(Errors.standard.code).json(Errors.standard);
   }
 };
+
+console.log(validator.isEmail("2@g.com"));
 
 memberController.login = async (req: Request, res: Response) => {
   try {
