@@ -36,8 +36,10 @@ memberController.signup = async (req: Request, res: Response) => {
   try {
     console.log("signup");
     const input: MemberInput = req.body;
-    const email = req.body.memberEmail;
-    if (!validator.isEmail(email)) {
+    const { memberPhone, memberEmail } = req.body;
+    if (!validator.isMobilePhone(memberPhone))
+      throw new Errors(HttpCode.BAD_REQUEST, Message.NOT_VALID_PHONE);
+    if (!validator.isEmail(memberEmail)) {
       throw new Errors(HttpCode.BAD_REQUEST, Message.NOT_VALID_EMAIL);
     }
 
@@ -56,8 +58,6 @@ memberController.signup = async (req: Request, res: Response) => {
     else res.status(Errors.standard.code).json(Errors.standard);
   }
 };
-
-console.log(validator.isEmail("2@g.com"));
 
 memberController.login = async (req: Request, res: Response) => {
   try {
@@ -139,7 +139,7 @@ memberController.deleteMember = async (req: ExtendedRequest, res: Response) => {
   try {
     console.log("deleteMember");
     const input: LoginInput = req.body;
-    const memberNick: string = req.member.memberNick;
+    const memberNick: string = req.body.memberNick;
     const result = await memberService.deleteMember(input, memberNick);
     res.status(HttpCode.OK).json(result);
   } catch (err) {
@@ -147,6 +147,14 @@ memberController.deleteMember = async (req: ExtendedRequest, res: Response) => {
     if (err instanceof Errors) res.status(err.code).json(err);
     else res.status(Errors.standard.code).json(Errors.standard);
   }
+};
+
+memberController.deleteImage = async (req: ExtendedRequest, res: Response) => {
+  const { memberNick } = req.member;
+
+  const result = await memberService.deleteImage(memberNick);
+  console.log(result);
+  res.status(200).json(result);
 };
 
 memberController.getTopUsers = async (req: Request, res: Response) => {
@@ -170,6 +178,7 @@ memberController.verifyAuth = async (
   try {
     const token = req.cookies["accessToken"];
     if (token) req.member = await authService.checkAuth(token);
+    console.log(token);
 
     if (!req.member)
       throw new Errors(HttpCode.UNAUTHORIZED, Message.NOT_AUTHENTICATED);
@@ -189,7 +198,6 @@ memberController.retrieveAuth = async (
 ) => {
   try {
     const token = req.cookies["accessToken"];
-
     if (token) req.member = await authService.checkAuth(token);
     next();
   } catch (err) {

@@ -160,6 +160,16 @@ class MemberService {
     return member;
   }
 
+  public async deleteImage(memberNick: string): Promise<Member> {
+    const member = await this.memberModel.findOneAndUpdate(
+      { memberNick: memberNick },
+      { memberImage: null },
+      { new: true }
+    );
+
+    return member;
+  }
+
   public async getTopUsers(): Promise<Member[]> {
     const result = await this.memberModel
       .find({

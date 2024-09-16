@@ -22,6 +22,12 @@ router.get(
   memberController.getMemberDetail
 );
 
+router.get(
+  "/member/delete/image",
+  memberController.verifyAuth,
+  memberController.deleteImage
+);
+
 router.post(
   "/member/update",
   memberController.verifyAuth,

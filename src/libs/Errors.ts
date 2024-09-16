@@ -17,6 +17,7 @@ export enum Message {
   UPDATE_FAILED = "Update is failed!",
 
   USED_NICK_PHONE = "You are inserting already used nick or phone!",
+  NOT_VALID_PHONE = "Please Insert Valid Phone Number!",
   NOT_VALID_EMAIL = "Please Insert Valid Email Address!",
   TOKEN_CREATION_FAILED = "Token creation error!",
   BLOCKED_USER = "You have been blocked, contact the restaurant",
