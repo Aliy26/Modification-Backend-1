@@ -5,6 +5,7 @@ import {
   LoginInput,
   MemberUpdateInput,
   UpdatePassword,
+  UpdateEmail,
 } from "../libs/types/member";
 import Errors from "../libs/Errors";
 import { HttpCode, Message } from "../libs/Errors";
@@ -87,6 +88,9 @@ class MemberService {
   }
 
   public async updatePassword(input: UpdatePassword): Promise<Member> {
+    console.log(input.memberNick);
+    if (input.memberPassword === input.newPassword)
+      throw new Errors(HttpCode.BAD_REQUEST, Message.NO_NEW_PASSWORD);
     const salt = await bcrypt.genSalt();
     input.newPassword = await bcrypt.hash(input.newPassword, salt);
 
@@ -125,6 +129,25 @@ class MemberService {
       .findOneAndUpdate({ _id: memberId }, input, { new: true })
       .exec();
     if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
+
+    return result;
+  }
+
+  public async updateEmail(
+    member: string,
+    input: UpdateEmail
+  ): Promise<Member> {
+    if (member !== input.memberNick)
+      throw new Errors(HttpCode.BAD_REQUEST, Message.NO_DATA_MATCH);
+    const result = await this.memberModel
+      .findOneAndUpdate(
+        { memberNick: member },
+        { memberEmail: input.memberEmail },
+        { new: true }
+      )
+      .exec();
+
+    if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
 
     return result;
   }

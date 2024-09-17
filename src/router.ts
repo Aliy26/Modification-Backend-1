@@ -42,6 +42,12 @@ router.post(
 );
 
 router.post(
+  "/member/update/email",
+  memberController.verifyAuth,
+  memberController.updateEmail
+);
+
+router.post(
   "/member/delete",
   memberController.verifyAuth,
   memberController.deleteMember

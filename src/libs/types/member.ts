@@ -43,6 +43,11 @@ export interface UpdatePassword {
   newPassword: string;
 }
 
+export interface UpdateEmail {
+  memberNick: string;
+  memberEmail: string;
+}
+
 export interface MemberUpdateInput {
   _id: ObjectId;
   memberStatus?: MemberStatus;

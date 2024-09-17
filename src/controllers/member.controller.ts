@@ -8,6 +8,7 @@ import {
   ExtendedRequest,
   MemberUpdateInput,
   UpdatePassword,
+  UpdateEmail,
 } from "../libs/types/member";
 import Errors, { HttpCode, Message } from "../libs/Errors";
 import AuthService from "../model/Auth.service";
@@ -109,6 +110,7 @@ memberController.updatePassword = async (req: Request, res: Response) => {
   try {
     console.log("updatePassword");
     const input: UpdatePassword = req.body;
+    console.log(input);
     const result = await memberService.updatePassword(input);
     res.status(HttpCode.OK).json(result);
   } catch (err) {
@@ -135,6 +137,22 @@ memberController.updateMember = async (req: ExtendedRequest, res: Response) => {
   }
 };
 
+memberController.updateEmail = async (req: ExtendedRequest, res: Response) => {
+  try {
+    console.log("updateEmail");
+    const input: UpdateEmail = req.body;
+    const member: string = req.member.memberNick;
+
+    if (!validator.isEmail(input.memberEmail))
+      throw new Errors(HttpCode.BAD_REQUEST, Message.NOT_VALID_EMAIL);
+    const result = await memberService.updateEmail(member, input);
+    res.status(200).json(result);
+  } catch (err) {
+    if (err instanceof Errors) res.status(err.code).json(err);
+    else res.status(Errors.standard.code).json(Errors.standard);
+  }
+};
+
 memberController.deleteMember = async (req: ExtendedRequest, res: Response) => {
   try {
     console.log("deleteMember");
@@ -150,11 +168,16 @@ memberController.deleteMember = async (req: ExtendedRequest, res: Response) => {
 };
 
 memberController.deleteImage = async (req: ExtendedRequest, res: Response) => {
-  const { memberNick } = req.member;
-
-  const result = await memberService.deleteImage(memberNick);
-  console.log(result);
-  res.status(200).json(result);
+  try {
+    console.log("delteImage");
+    const { memberNick } = req.member;
+    const result = await memberService.deleteImage(memberNick);
+    console.log(result);
+    res.status(200).json(result);
+  } catch (err) {
+    if (err instanceof Errors) res.status(err.code).json(err);
+    else res.status(Errors.standard.code).json(Errors.standard);
+  }
 };
 
 memberController.getTopUsers = async (req: Request, res: Response) => {
