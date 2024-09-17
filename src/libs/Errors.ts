@@ -16,6 +16,7 @@ export enum Message {
   DELETE_FAILED = "Delete is failed, wrong membernick!",
   UPDATE_FAILED = "Update is failed!",
 
+  NO_DATA_MATCH = "Data didn't match! Please insert the correct data",
   USED_NICK_PHONE = "You are inserting already used nick or phone!",
   NOT_VALID_PHONE = "Please Insert Valid Phone Number!",
   NOT_VALID_EMAIL = "Please Insert Valid Email Address!",

@@ -139,7 +139,7 @@ memberController.deleteMember = async (req: ExtendedRequest, res: Response) => {
   try {
     console.log("deleteMember");
     const input: LoginInput = req.body;
-    const memberNick: string = req.body.memberNick;
+    const memberNick: string = req.member.memberNick;
     const result = await memberService.deleteMember(input, memberNick);
     res.status(HttpCode.OK).json(result);
   } catch (err) {
@@ -178,8 +178,6 @@ memberController.verifyAuth = async (
   try {
     const token = req.cookies["accessToken"];
     if (token) req.member = await authService.checkAuth(token);
-    console.log(token);
-
     if (!req.member)
       throw new Errors(HttpCode.UNAUTHORIZED, Message.NOT_AUTHENTICATED);
 

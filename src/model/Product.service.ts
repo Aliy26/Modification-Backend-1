@@ -17,14 +17,19 @@ import { ViewGroup } from "../libs/enums/view.enum";
 import LikeService from "./Likes.service";
 import { LikeGroup } from "../libs/enums/likes";
 import { LikeInput } from "../libs/types/likes";
+import OrderItem from "../schema/OrderItem.model";
+import { OrderStatus } from "../libs/enums/order.enum";
+import { OrderItems } from "../libs/types/order";
 
 class ProductService {
   private readonly productModel;
-  public viewService;
+  private readonly viewService;
   private readonly likeService;
+  private readonly orderItemModel;
 
   constructor() {
     this.productModel = ProductModel;
+    this.orderItemModel = OrderItem;
     this.viewService = new ViewService();
     this.likeService = new LikeService();
   }
@@ -98,10 +103,15 @@ class ProductService {
   }
 
   public async modifyCount(input: ModifyCount[]): Promise<void> {
+    console.log(input);
     const updatePromises = input.map((item) =>
-      this.productModel.findByIdAndUpdate(item._id, {
-        $inc: { productLeftCount: item.count },
-      })
+      this.productModel.findByIdAndUpdate(
+        item._id,
+        {
+          $inc: { productLeftCount: item.count },
+        },
+        { new: true }
+      )
     );
 
     await Promise.allSettled(updatePromises);
@@ -174,11 +184,25 @@ class ProductService {
     input: ProductUpdateInput
   ): Promise<Product> {
     id = shapeIntoMongooseObjectId(id);
+    const product = await this.productModel.findById(id);
+
     const result = await this.productModel
       .findOneAndUpdate({ _id: id }, input, { new: true })
       .exec();
     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.UPDATE_FAILED);
 
+    if (product.productPrice !== result.productPrice) {
+      const updatedPrice = await this.orderItemModel
+        .updateMany(
+          {
+            productId: result._id,
+            status: OrderStatus.PAUSE,
+          },
+          { itemPrice: result.productPrice }
+        )
+        .exec();
+      console.log(updatedPrice);
+    }
     return result;
   }
 

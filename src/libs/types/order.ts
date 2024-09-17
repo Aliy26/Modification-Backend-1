@@ -8,6 +8,7 @@ export interface OrderItems {
   itemPrice: number;
   orderId: ObjectId;
   productId: ObjectId;
+  status: OrderStatus;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -4,6 +4,7 @@ import {
   ProductSize,
   ProductStatus,
 } from "../enums/product.enum";
+import { OrderStatus } from "../enums/order.enum";
 
 export interface Product {
   _id: ObjectId;

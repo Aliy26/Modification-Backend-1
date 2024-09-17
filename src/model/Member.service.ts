@@ -133,8 +133,9 @@ class MemberService {
     input: LoginInput,
     memberNick: string
   ): Promise<Member> {
+    console.log(input.memberNick, memberNick);
     if (input.memberNick !== memberNick)
-      throw new Errors(HttpCode.BAD_REQUEST, Message.DELETE_FAILED);
+      throw new Errors(HttpCode.BAD_REQUEST, Message.NO_DATA_MATCH);
     const member = await this.memberModel
       .findOne({
         memberNick: input.memberNick,
