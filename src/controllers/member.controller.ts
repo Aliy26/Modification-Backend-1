@@ -106,11 +106,15 @@ memberController.getMemberDetail = async (
   }
 };
 
-memberController.updatePassword = async (req: Request, res: Response) => {
+memberController.updatePassword = async (
+  req: ExtendedRequest,
+  res: Response
+) => {
   try {
     console.log("updatePassword");
     const input: UpdatePassword = req.body;
-    console.log(input);
+    if (input.memberNick !== req.member.memberNick)
+      throw new Errors(HttpCode.BAD_REQUEST, Message.NO_DATA_MATCH);
     const result = await memberService.updatePassword(input);
     res.status(HttpCode.OK).json(result);
   } catch (err) {

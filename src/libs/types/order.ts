@@ -20,7 +20,7 @@ export interface Order {
   orderStatus: OrderStatus;
   memberId: ObjectId;
   createdAt: Date;
-  updated: Date;
+  updatedAt: Date;
   //** from aggregation **/
   orderItems: OrderItems[];
   productData: Product[];

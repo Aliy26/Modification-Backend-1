@@ -7,3 +7,12 @@ export const shapeIntoMongooseObjectId = (target: any) => {
     ? new mongoose.Types.ObjectId(target)
     : target;
 };
+
+import moment from "moment";
+
+const day = moment().format("YY-MM-DD");
+const time = moment().format("HH:mm");
+
+export const emailMessage = `Thank you for shopping at Gatorade.com</h1>
+<p>Your order has been placed successfully today 20${day} at ${time}</p>
+`;

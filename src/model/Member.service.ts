@@ -88,7 +88,6 @@ class MemberService {
   }
 
   public async updatePassword(input: UpdatePassword): Promise<Member> {
-    console.log(input.memberNick);
     if (input.memberPassword === input.newPassword)
       throw new Errors(HttpCode.BAD_REQUEST, Message.NO_NEW_PASSWORD);
     const salt = await bcrypt.genSalt();

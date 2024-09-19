@@ -192,7 +192,7 @@ class ProductService {
     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.UPDATE_FAILED);
 
     if (product.productPrice !== result.productPrice) {
-      const updatedPrice = await this.orderItemModel
+      await this.orderItemModel
         .updateMany(
           {
             productId: result._id,
@@ -201,7 +201,6 @@ class ProductService {
           { itemPrice: result.productPrice }
         )
         .exec();
-      console.log(updatedPrice);
     }
     return result;
   }

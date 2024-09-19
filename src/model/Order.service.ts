@@ -134,11 +134,13 @@ class OrderService {
       await this.productService.modifyCount(modifyCountInput);
       const updateStatus = orders.map(async (ele: OrderItems) => {
         const status = ele.status;
-        return await this.orderItemModel.findOneAndUpdate(
-          { status: status },
-          { status: OrderStatus.PROCESS },
-          { new: true }
-        );
+        return await this.orderItemModel
+          .findOneAndUpdate(
+            { status: status },
+            { status: OrderStatus.PROCESS },
+            { new: true }
+          )
+          .exec();
       });
       await Promise.all(updateStatus);
     } else if (result.orderStatus === OrderStatus.DELETE) {
