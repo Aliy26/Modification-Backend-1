@@ -6,7 +6,7 @@ export enum ProductSize {
 }
 
 export enum ProductVolume {
-  HALF = 0.5,
+  HALF = 0.35,
   ONE = 1,
   ONE_POINT_TWO = 1.2,
   ONE_POINT_FIVE = 1.5,
@@ -20,9 +20,9 @@ export enum ProductStatus {
 }
 
 export enum ProductCollection {
-  DISH = "DISH",
-  SALAD = "SALAD",
-  DESSERT = "DESSERT",
-  DRINK = "DRINK",
+  BOTTLE = "BOTTLE",
+  POWDER = "POWDER",
+  TABLET = "TABLET",
+  PROTEIN = "PROTEIN",
   OTHER = "OTHER",
 }

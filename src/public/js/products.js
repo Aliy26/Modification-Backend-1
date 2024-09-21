@@ -3,7 +3,7 @@ console.log("Products frontend javascript file");
 $(function () {
   $(".product-collection").on("change", () => {
     const selectedValue = $(".product-collection").val();
-    if (selectedValue === "DRINK") {
+    if (selectedValue === "BOTTLE") {
       $("#product-collection").hide();
       $("#product-volume").show();
     } else {
@@ -20,6 +20,7 @@ $(function () {
   $("#cancel-btn").on("click", () => {
     $(".dish-container").slideToggle(100);
     $("#process-btn").css("display", "flex");
+    return false;
   });
 
   const confirmation = (str) =>
@@ -30,12 +31,14 @@ $(function () {
 
     if (confirm("Do you want to remove the item?")) {
       await axios.post(`/admin/product/delete/${id}`);
-    }
-    try {
-      $(e.target).closest("tbody").remove();
-    } catch (err) {
-      console.log(err);
-      alert("Product deletion failed!");
+      try {
+        $(e.target).closest("tbody").remove();
+      } catch (err) {
+        console.log(err);
+        alert("Product deletion failed!");
+      }
+    } else {
+      return false;
     }
   });
 

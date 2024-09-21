@@ -29,7 +29,7 @@
       <div class="board">
         <div class="dishes-table">
           <span class="new-dish-txt" style="margin-bottom: 30px">
-            RESTAURANT MENU
+            Products List
           </span>
           <table class="table table-bordered table-hover">
             <thead class="thead-light">
@@ -50,7 +50,7 @@
               <td class="flex-td"><input class="table-input name-input" id="<%= product._id %> " type="text" value="<%= product.productName %>"></td>
               <td><%= product.productCollection %></td>
               <td>
-                <%= product.productCollection === "DRINK" ?
+                <%= product.productCollection === "BOTTLE" ?
                 product.productVolume : product.productSize %>
               </td>
               <td class="flex-td"><input type="text" class="table-input price-input" value="<%= product.productPrice %>" id="<%= product._id %>"></td>
@@ -133,10 +133,10 @@
             <div class="half-input">
               <label>Product Type</label>
               <select class="product-collection" name="productCollection">
-                <option value="DISH" selected>Dish</option>
-                <option value="SALAD">Salad</option>
-                <option value="DESSERT">Dessert</option>
-                <option value="DRINK">Drink</option>
+                <option value="POWDER" selected>Powder</option>
+                <option value="TABLET">Tablet</option>
+                <option value="PROTEIN">Protein</option>
+                <option value="BOTTLE">Bottle</option>
                 <option value="OTHER">Other</option>
               </select>
             </div>
@@ -226,8 +226,8 @@
           </div>
 
           <div class="operation-buttons">
-            <button class="btn btn-danger" id="cancel-btn">Cancel</button>
-            <button type="submit" class="btn btn-primary" id="create-btn">
+            <button class="btn btn-danger" type="button" id="cancel-btn">Cancel</button>
+            <button type="" class="btn btn-primary" id="create-btn">
               Create
             </button>
           </div>
