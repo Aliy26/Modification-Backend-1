@@ -51,20 +51,33 @@
           <span class="header-name" style="margin-bottom: 30px"
             >All Users List</span
           >
+          <div class="sorting-buttons">
+            <button class="sort-btn" data-category="all">All Users</button>
+            <button class="sort-btn" data-category="ACTIVE">Active Users</button>
+            <button class="sort-btn" data-category="BLOCK">Blocked Users</button>
+            <button class="sort-btn" data-category="hide">Hide Users</button>
+       
+          </div>
           <table class="table table-hover table-sm">
             <thead class="thead-light">
               <tr class="thead-light">
                 <th scope="col">No</th>
                 <th scope="col">Name</th>
                 <th scope="col">Phone</th>
+                <th scope="col">Address</th>
+                <th scope="col">Email</th>
+                <th scope="col">Points</th>
                 <th scope="col">Status</th>
               </tr>
             </thead>
             <% users.map((user, index) => { %>
-            <tbody style="background: white">
+            <tbody style="background: white" class="dataset" data-category="<%= user.memberStatus %>">
               <td><%= index + 1 %></td>
               <td><%= user.memberNick %></td>
               <td><%= user.memberPhone %></td>
+              <td><%= user.memberAddress %></td>
+              <td><%= user.memberEmail %></td>
+              <td><%= user.memberPoints %></td>
               <td style="width: 13%">
                 <select class="spec-select member-status" id="<%= user._id%>">
                   <option value="ACTIVE" <%= user.memberStatus === "ACTIVE" ? "selected" : "" %> >ACTIVE</option>

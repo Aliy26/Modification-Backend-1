@@ -21,3 +21,16 @@ $(() => {
       });
   });
 });
+
+$(".sort-btn").on("click", function () {
+  const category = $(this).data("category");
+
+  if (category === "all") {
+    $(".dataset").show();
+  } else if (category === "hide") {
+    $(".dataset").hide();
+  } else {
+    $(".dataset").hide();
+    $(`.dataset[data-category="${category}"]`).show();
+  }
+});

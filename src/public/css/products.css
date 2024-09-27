@@ -11,11 +11,17 @@
 
 .products-container a {
   text-decoration: none;
+  cursor: pointer;
   color: #000000;
+  transition: color 0.5s ease;
 }
 
 .products-container .nav-item a {
-  color: #06551e;
+  color: #445c75;
+}
+
+.nav-item a:hover {
+  color: #07468a;
 }
 
 .products-container .nav-item a.disabled {
@@ -298,6 +304,16 @@
   font-weight: 400;
   font-size: 15px;
   line-height: 26px;
+  cursor: pointer;
+  color: #4f547b;
+}
+
+.products-container .half-input input {
+  font-family: "GT Walsheim Pro";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 26px;
   color: #4f547b;
 }
 
@@ -305,6 +321,14 @@
 table th {
   text-align: center;
   vertical-align: middle;
+}
+
+.products-container table td input {
+  cursor: pointer;
+}
+
+.products-container table input {
+  width: 130px;
 }
 
 .products-container .switch {
@@ -374,6 +398,7 @@ table th {
   background-color: #fff;
   padding-left: 5px;
   padding-right: 5px;
+  cursor: pointer;
 }
 
 .table-input {
@@ -387,4 +412,29 @@ table th {
 
 .price-table {
   text-align: center;
+}
+
+.sorting-buttons {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.sort-btn {
+  background-color: #445c75;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+  margin-right: 10px;
+}
+
+.sort-btn:hover {
+  background-color: #07468a;
+}
+
+.sort-btn:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }

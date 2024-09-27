@@ -1,14 +1,39 @@
 console.log("Products frontend javascript file");
 
+$(".sort-btn").on("click", function () {
+  const category = $(this).data("category");
+
+  if (category === "all") {
+    $(".tbodyy").show();
+  } else {
+    $(".tbodyy").hide();
+    $(`.tbodyy[data-category="${category}"]`).show();
+  }
+});
+
 $(function () {
-  $(".product-collection").on("change", () => {
-    const selectedValue = $(".product-collection").val();
-    if (selectedValue === "BOTTLE") {
-      $("#product-collection").hide();
-      $("#product-volume").show();
-    } else {
-      $("#product-volume").hide();
-      $("#product-collection").show();
+  // Product Collection Change Logic
+  $(".product-collection").on("change", function () {
+    const selectedValue = $(this).val();
+
+    switch (selectedValue) {
+      case "POWDER":
+        $("#itemUnit").val("Sticks");
+        break;
+      case "TABLET":
+        $("#itemUnit").val("Tubes");
+        break;
+      case "PROTEIN":
+        $("#itemUnit").val("Canister");
+        break;
+      case "BOTTLE":
+        $("#itemUnit").val("Bottle");
+        break;
+      case "OTHER":
+        $("#itemUnit").val("Other");
+        break;
+      default:
+        $("#itemUnit").val("Sticks");
     }
   });
 
@@ -127,16 +152,20 @@ $(function () {
 function validateForm() {
   const productName = $(".product-name").val(),
     productPrice = $(".product-price").val(),
-    productLeftCount = $(".product-left-count").val(),
     productCollection = $(".product-collection").val(),
+    productUnit = $(".product-unit").val(),
+    productPerSale = $(".product-per-sale").val(),
+    productLeftCount = $(".product-left-count").val(),
     productDesc = $(".product-desc").val(),
     productStatus = $(".product-status").val();
 
   if (
     productName === "" ||
     productPrice === "" ||
-    productLeftCount === "" ||
     productCollection === "" ||
+    productUnit === "" ||
+    productPerSale === "" ||
+    productLeftCount === "" ||
     productDesc === "" ||
     productStatus === ""
   ) {

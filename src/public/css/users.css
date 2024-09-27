@@ -101,10 +101,36 @@
   font-size: 15px;
   line-height: 26px;
   color: #4f547b;
+  cursor: pointer;
 }
 
 .users-container table td,
 table th {
   text-align: center;
   vertical-align: middle;
+}
+
+.sorting-buttons {
+  margin-top: 10px;
+  margin-bottom: 35px;
+}
+
+.sort-btn {
+  background-color: #445c75;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+  margin-right: 10px;
+}
+
+.sort-btn:hover {
+  background-color: #07468a;
+}
+
+.sort-btn:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }

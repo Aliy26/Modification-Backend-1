@@ -27,6 +27,14 @@
 
     <div class="restaurant-menu-frame">
       <div class="board">
+        <div class="sorting-buttons">
+          <button class="sort-btn" data-category="all">All</button>
+          <button class="sort-btn" data-category="POWDER">Powders</button>
+          <button class="sort-btn" data-category="TABLET">Tablets</button>
+          <button class="sort-btn" data-category="PROTEIN">Protein</button>
+          <button class="sort-btn" data-category="BOTTLE">Bottles</button>
+          <button class="sort-btn" data-category="OTHER">Others</button>
+        </div>
         <div class="dishes-table">
           <span class="new-dish-txt" style="margin-bottom: 30px">
             Products List
@@ -35,24 +43,23 @@
             <thead class="thead-light">
               <tr class="thead-light">
                 <th scope="col">T/r</th>
-                <th scope="col">Product Name</th>
-                <th scope="col">Product Type</th>
-                <th scope="col">Product Volume</th>
-                <th scope="col">Product Price</th>
-                <th scope="col">Product Left Count</th>
-                <th scope="col">Status</th>
+                <th scope="col">Item Name</th>
+                <th scope="col">Item Type</th>
+                <th scope="col">Per Sale Count</th>
+                <th scope="col">Item Unit</th>
+                <th scope="col">Item Price</th>
+                <th scope="col">Item Left Count</th>
+                <th scope="col">Item Status</th>
                 <th scope="col">Remvoe Item</th>
               </tr>
             </thead>
             <% products.map((product, index) => { %>
-            <tbody style="background: white" class="tbodyy">
+            <tbody style="background: white" class="tbodyy" data-category="<%= product.productCollection %>">
               <td><%= index + 1 %></td>
               <td class="flex-td"><input class="table-input name-input" id="<%= product._id %> " type="text" value="<%= product.productName %>"></td>
               <td><%= product.productCollection %></td>
-              <td>
-                <%= product.productCollection === "BOTTLE" ?
-                product.productVolume : product.productSize %>
-              </td>
+              <td><%= product.productPerSaleCount %></td>
+              <td><%= product.productUnit %></td>
               <td class="flex-td"><input type="text" class="table-input price-input" value="<%= product.productPrice %>" id="<%= product._id %>"></td>
               <td class="price-table"><input type="text" class="table-input count-input" value="<%= product.productLeftCount %>" id="<%= product._id %>"></td>
            
@@ -92,77 +99,68 @@
           <div class="long-input" style="display: flex; align-items: center">
             <span class="new-dish-txt">NEW PRODUCT DETAIL</span>
           </div>
-          <div class="login-input-frame">
-            <div class="long-input">
-              <label>Product Name</label>
-              <input
+     
+            <div class="half-input-frame">
+              <div class="half-input">
+               <label>Product Name</label>
+                <input
                 type="text"
                 placeholder="Name"
                 name="productName"
                 class="product-name"
-              />
-            </div>
-            <input
-              name="productStatus"
-              value="PAUSE"
-              class="product-status"
-              hidden
-            />
-          </div>
-          <div class="half-input-frame">
-            <div class="half-input">
-              <label>Product Price</label>
-              <input
-                type="number"
+                />
+              </div>
+              <div class="half-input">
+               <label>Product Price</label>
+                <input
+                type="text"
                 placeholder="Price"
                 name="productPrice"
                 class="product-price"
-              />
-            </div>
-            <div class="half-input">
-              <label>Product Left Counts</label>
-              <input
-                type="number"
-                placeholder="Counts"
-                name="productLeftCount"
-                class="product-left-count"
-              />
-            </div>
-          </div>
-          <div class="half-input-frame">
-            <div class="half-input">
-              <label>Product Type</label>
-              <select class="product-collection" name="productCollection">
-                <option value="POWDER" selected>Powder</option>
-                <option value="TABLET">Tablet</option>
-                <option value="PROTEIN">Protein</option>
-                <option value="BOTTLE">Bottle</option>
-                <option value="OTHER">Other</option>
-              </select>
+                />
+              </div>
             </div>
 
-            <div class="half-input" id="product-collection">
-              <label>Dish Volume</label>
-              <select class="product-size" name="productSize">
-                <option value="SMALL">Small</option>
-                <option value="NORMAL" selected>Normal</option>
-                <option value="LARGE">Large</option>
-                <option value="SET">Set</option>
-              </select>
-            </div>
+            <div class="half-input-frame">
+              <div class="half-input">
+                <label>Product Type</label>
+                <select class="product-collection" name="productCollection">
+                  <option value="POWDER" selected>Powder</option>
+                  <option value="TABLET">Tablet</option>
+                  <option value="PROTEIN">Protein</option>
+                  <option value="BOTTLE">Bottle</option>
+                  <option value="OTHER">Other</option>
+                </select>
+              </div>
+  
+              <div class="half-input" id="product-collection">
+                <label>Item Unit</label>
+                <input type="text" id="itemUnit" value="Sticks" readonly class="product-unit" name="productUnit">
+              </div>
+               </div>
 
-            <div class="half-input" id="product-volume" style="display: none">
-              <label>Drink Volume</label>
-              <select class="product-volume" name="productVolume">
-                <option value="0.5">0,5 liters</option>
-                <option value="1" selected>1 liters</option>
-                <option value="1.2">1,2 liters</option>
-                <option value="1.5">1,5 liters</option>
-                <option value="2">2 liters</option>
-              </select>
+            <div class="half-input-frame">
+              <div class="half-input">
+                <label>Per Sale Count</label>
+                <input
+                  type="number"
+                  placeholder="Per Sale Count"
+                  name="productPerSaleCount"
+                  class="product-per-sale"
+                />
+              </div>
+              <div class="half-input">
+                <label>Product Left Counts</label>
+                <input
+                  type="number"
+                  placeholder="Counts"
+                  name="productLeftCount"
+                  class="product-left-count"
+                />
+              </div>
             </div>
-          </div>
-          <div class="long-input">
+              
+            <div class="long-input">
             <label>Product Description</label>
             <textarea name="productDesc" class="product-desc"></textarea>
           </div>
