@@ -1,6 +1,6 @@
 export enum ProductUnit {
   STICKS = "Sticks",
-  TUBES = "Tubes",
+  TABLET = "Tablet",
   CANISTER = "Canister",
   BOTTLE = "Bottle",
   OTHER = "Other",

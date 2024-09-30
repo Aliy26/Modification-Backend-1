@@ -126,6 +126,7 @@ class MemberService {
     const memberId = shapeIntoMongooseObjectId(member._id);
     const result = this.memberModel
       .findOneAndUpdate({ _id: memberId }, input, { new: true })
+      .lean()
       .exec();
     if (!result) throw new Errors(HttpCode.NOT_MODIFIED, Message.UPDATE_FAILED);
 
@@ -144,6 +145,7 @@ class MemberService {
         { memberEmail: input.memberEmail },
         { new: true }
       )
+      .lean()
       .exec();
 
     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);

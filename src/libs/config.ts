@@ -13,6 +13,8 @@ import moment from "moment";
 const day = moment().format("YY-MM-DD");
 const time = moment().format("HH:mm");
 
-export const emailMessage = `Thank you for shopping at Gatorade.com</h1>
-<p>Your order has been placed successfully today 20${day} at ${time}</p>
+export const emailMessage = `thank you for shopping at Gatorade.com</h1>
+<p>Your order has been placed successfully! \n
+Order date: 20${day} at ${time}</p> \n
+Order to be deliverd to : 
 `;

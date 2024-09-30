@@ -15,6 +15,7 @@ orderController.createOrder = async (req: ExtendedRequest, res: Response) => {
   try {
     console.log("createOrder");
     const result = await orderService.createOrder(req.member, req.body);
+
     res.status(HttpCode.CREATED).json(result);
   } catch (err) {
     console.log("createOrder", err);
@@ -26,6 +27,7 @@ orderController.createOrder = async (req: ExtendedRequest, res: Response) => {
 orderController.getMyOrders = async (req: ExtendedRequest, res: Response) => {
   try {
     console.log("getMyOrders");
+
     const { page, limit, orderStatus } = req.query;
     const inquiry: OrderInquiry = {
       page: Number(page),
@@ -54,7 +56,7 @@ orderController.updateOrder = async (req: ExtendedRequest, res: Response) => {
         await sendOrderConfirmation({
           to: req.member.memberEmail,
           subject: "Order Confirmation",
-          html: `<h1>Dear ${req.member.memberNick}, ${emailMessage}`,
+          html: `<h1>Dear ${req.member.memberNick}, ${emailMessage} ${req.member.memberAddress}`,
         });
       } catch (err) {
         console.error("Failed to send order confirmation email:", err);

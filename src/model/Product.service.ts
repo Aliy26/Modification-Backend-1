@@ -44,9 +44,9 @@ class ProductService {
     if (inquiry.search) {
       match.productName = { $regex: new RegExp(inquiry.search, "i") };
     }
-
+    console.log(inquiry);
     const sort: T =
-      inquiry.order === "productPrice"
+      inquiry.sort === "desc"
         ? { [inquiry.order]: 1 }
         : { [inquiry.order]: -1 };
 

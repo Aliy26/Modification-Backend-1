@@ -15,12 +15,17 @@ productController.getProducts = async (req: Request, res: Response) => {
   try {
     console.log("getProducts");
 
-    const { page, limit, order, productCollection, search } = req.query;
+    const { page, limit, order, productCollection, sort, search } = req.query;
     const inquiry: ProductInquiry = {
       order: String(order),
       page: Number(page),
       limit: Number(limit),
     };
+
+    if (sort) {
+      inquiry.sort = String(sort);
+    }
+
     if (productCollection) {
       inquiry.productCollection = productCollection as ProductCollection;
     }

@@ -131,7 +131,12 @@ memberController.updateMember = async (req: ExtendedRequest, res: Response) => {
     const input: MemberUpdateInput = req.body;
     if (req.file) input.memberImage = req.file.path.replace(/\\/, "/");
 
-    const result = await memberService.updateMember(req.member, input);
+    const result = await memberService.updateMember(req.member, input),
+      token = await authService.createToken(result);
+    res.cookie("accessToken", token, {
+      maxAge: AUTH_TIMER * 3600 * 1000,
+      httpOnly: false,
+    });
 
     res.status(HttpCode.OK).json(result);
   } catch (err) {
@@ -149,7 +154,12 @@ memberController.updateEmail = async (req: ExtendedRequest, res: Response) => {
 
     if (!validator.isEmail(input.memberEmail))
       throw new Errors(HttpCode.BAD_REQUEST, Message.NOT_VALID_EMAIL);
-    const result = await memberService.updateEmail(member, input);
+    const result = await memberService.updateEmail(member, input),
+      token = await authService.createToken(result);
+    res.cookie("accessToken", token, {
+      maxAge: AUTH_TIMER * 3600 * 1000,
+      httpOnly: false,
+    });
     res.status(200).json(result);
   } catch (err) {
     if (err instanceof Errors) res.status(err.code).json(err);
