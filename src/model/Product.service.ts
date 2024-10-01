@@ -47,8 +47,8 @@ class ProductService {
     console.log(inquiry);
     const sort: T =
       inquiry.sort === "desc"
-        ? { [inquiry.order]: 1 }
-        : { [inquiry.order]: -1 };
+        ? { [inquiry.order]: -1 }
+        : { [inquiry.order]: 1 };
 
     const result = await this.productModel
       .aggregate([
