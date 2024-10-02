@@ -86,6 +86,25 @@ $(function () {
     }
   });
 
+  $(".perSaleCount").on("change", async (e) => {
+    const id = e.target.id;
+    const input = e.target.value;
+    try {
+      if (confirmation("per sale count?")) {
+        const response = await axios.post(`/admin/product/${id}`, {
+          productPerSaleCount: input,
+        });
+        const result = response.data;
+        if (result.data) {
+          console.log("Product updated!");
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      alert("Product update failed!");
+    }
+  });
+
   $(".price-input").on("change", async (e) => {
     const id = e.target.id;
 

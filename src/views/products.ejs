@@ -58,7 +58,7 @@
               <td><%= index + 1 %></td>
               <td class="flex-td"><input class="table-input name-input" id="<%= product._id %> " type="text" value="<%= product.productName %>"></td>
               <td><%= product.productCollection %></td>
-              <td><%= product.productPerSaleCount %></td>
+              <td class="flex-td"><input class="perSaleCount table-input" id="<%= product._id %> " type="text" value="<%= product.productPerSaleCount %>"></td>
               <td><%= product.productUnit %></td>
               <td class="flex-td"><input type="text" class="table-input price-input" value="<%= product.productPrice %>" id="<%= product._id %>"></td>
               <td class="price-table"><input type="text" class="table-input count-input" value="<%= product.productLeftCount %>" id="<%= product._id %>"></td>
