@@ -12,6 +12,9 @@ export interface Product {
   productName: string;
   productPrice: number;
   productLeftCount: number;
+  productSoldCount: number;
+  productPerSaleCount: number;
+  productUnit: ProductUnit;
   productDesc?: string;
   productImages: string[];
   productViews: number;
@@ -34,9 +37,9 @@ export interface ProductInput {
   productName: string;
   productPrice: number;
   productLeftCount: number;
-  productUnit: ProductUnit;
+  productSoldCount: number;
   productPerSaleCount: number;
-  productVolume?: number;
+  productUnit: ProductUnit;
   productDesc?: string;
   productImages?: string[];
   productViews?: number;

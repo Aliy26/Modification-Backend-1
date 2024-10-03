@@ -100,13 +100,15 @@ class ProductService {
     return result;
   }
 
-  public async modifyCount(input: ModifyCount[]): Promise<void> {
-    console.log(input);
+  public async modifyCount(
+    input: ModifyCount[],
+    target: string
+  ): Promise<void> {
     const updatePromises = input.map((item) =>
       this.productModel.findByIdAndUpdate(
         item._id,
         {
-          $inc: { productLeftCount: item.count },
+          $inc: { [target]: item.count },
         },
         { new: true }
       )

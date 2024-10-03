@@ -131,7 +131,17 @@ class OrderService {
           count: -ele.itemQuantity,
         };
       });
-      await this.productService.modifyCount(modifyCountInput);
+      await this.productService.modifyCount(
+        modifyCountInput,
+        "productLeftCount"
+      );
+      await this.productService.modifyCount(
+        modifyCountInput.map((item) => ({
+          _id: item._id,
+          count: -item.count,
+        })),
+        "productSoldCount"
+      );
       const updateStatus = orders.map(async (ele: OrderItems) => {
         const status = ele.status;
         return await this.orderItemModel
@@ -184,43 +194,43 @@ class OrderService {
   //   }
   // }
 
-  public async cancelOverdueOrders(): Promise<void> {
-    const oneDay = new Date(Date.now() - 60 * 60 * 24 * 1000);
-    try {
-      const overdueOrders: Order[] = await this.orderModel.find({
-        orderStatus: OrderStatus.PAUSE,
-        createdAt: { $lt: oneDay },
-      });
+  // public async cancelOverdueOrders(): Promise<void> {
+  //   const oneDay = new Date(Date.now() - 60 * 60 * 24 * 1000);
+  //   try {
+  //     const overdueOrders: Order[] = await this.orderModel.find({
+  //       orderStatus: OrderStatus.PAUSE,
+  //       createdAt: { $lt: oneDay },
+  //     });
 
-      await Promise.all(
-        overdueOrders.map((order) => this.updateOverdueOrder(order._id))
-      );
-    } catch (err) {
-      console.error("Error, cancelOverdueOrders", err);
-    }
-  }
+  //     await Promise.all(
+  //       overdueOrders.map((order) => this.updateOverdueOrder(order._id))
+  //     );
+  //   } catch (err) {
+  //     console.error("Error, cancelOverdueOrders", err);
+  //   }
+  // }
 
-  public async updateOverdueOrder(orderId: ObjectId): Promise<void> {
-    try {
-      const orderItems: OrderItems[] = await this.orderItemModel.find({
-        orderId,
-      });
-      const modifyCountInput = orderItems.map((item) => ({
-        _id: item.productId,
-        count: item.itemQuantity,
-      }));
+  // public async updateOverdueOrder(orderId: ObjectId): Promise<void> {
+  //   try {
+  //     const orderItems: OrderItems[] = await this.orderItemModel.find({
+  //       orderId,
+  //     });
+  //     const modifyCountInput = orderItems.map((item) => ({
+  //       _id: item.productId,
+  //       count: item.itemQuantity,
+  //     }));
 
-      await this.productService.modifyCount(modifyCountInput);
+  //     await this.productService.modifyCount(modifyCountInput);
 
-      await this.orderModel.findByIdAndUpdate(orderId, {
-        orderStatus: OrderStatus.DELETE,
-      });
+  //     await this.orderModel.findByIdAndUpdate(orderId, {
+  //       orderStatus: OrderStatus.DELETE,
+  //     });
 
-      console.log(`Order ${orderId} cancelled successfully`);
-    } catch (err) {
-      console.error("Error, cancelOrder", err);
-    }
-  }
+  //     console.log(`Order ${orderId} cancelled successfully`);
+  //   } catch (err) {
+  //     console.error("Error, cancelOrder", err);
+  //   }
+  // }
 }
 
 export default OrderService;

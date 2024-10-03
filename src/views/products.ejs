@@ -45,10 +45,11 @@
                 <th scope="col">T/r</th>
                 <th scope="col">Item Name</th>
                 <th scope="col">Item Type</th>
-                <th scope="col">Per Sale Count</th>
                 <th scope="col">Item Unit</th>
-                <th scope="col">Item Price</th>
+                <th scope="col">Sold Count</th>
+                <th scope="col">Per Sale Count</th>
                 <th scope="col">Item Left Count</th>
+                <th scope="col">Item Price</th>
                 <th scope="col">Item Status</th>
                 <th scope="col">Remvoe Item</th>
               </tr>
@@ -58,10 +59,11 @@
               <td><%= index + 1 %></td>
               <td class="flex-td"><input class="table-input name-input" id="<%= product._id %> " type="text" value="<%= product.productName %>"></td>
               <td><%= product.productCollection %></td>
-              <td class="flex-td"><input class="perSaleCount table-input" id="<%= product._id %> " type="text" value="<%= product.productPerSaleCount %>"></td>
               <td><%= product.productUnit %></td>
-              <td class="flex-td"><input type="text" class="table-input price-input" value="<%= product.productPrice %>" id="<%= product._id %>"></td>
+              <td><%= product.productSoldCount%></td>
+              <td class="flex-td"><input class="perSaleCount table-input" id="<%= product._id %> " type="text" value="<%= product.productPerSaleCount %>"></td>
               <td class="price-table"><input type="text" class="table-input count-input" value="<%= product.productLeftCount %>" id="<%= product._id %>"></td>
+              <td class="flex-td"><input type="text" class="table-input price-input" value="<%= product.productPrice %>" id="<%= product._id %>"></td>
            
               <td>
                 <select
