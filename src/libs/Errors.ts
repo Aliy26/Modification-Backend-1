@@ -24,7 +24,7 @@ export enum Message {
   TOKEN_CREATION_FAILED = "Token creation error!",
   BLOCKED_USER = "You have been blocked, contact the restaurant",
   NO_MEMBER_NICK = "No member with that nick!",
-  NOT_AVAILABLE = "This member nick is not available!",
+  TAKEN_NICK = "This member nick is taken!",
   NO_ADMIN_NICK = "No Admin with that nick!",
   WRONG_PASSWROD = "Wrong password please try again!",
   NOT_AUTHENTICATED = "You  are not authenticated, Please login first!",

@@ -124,6 +124,13 @@ class MemberService {
     input: MemberUpdateInput
   ): Promise<Member> {
     const memberId = shapeIntoMongooseObjectId(member._id);
+    const memberNick = await this.memberModel
+      .findOne({ memberNick: input.memberNick })
+      .exec();
+
+    if (memberNick.memberNick !== member.memberNick) {
+      throw new Errors(HttpCode.FORBIDDEN, Message.TAKEN_NICK);
+    }
     const result = this.memberModel
       .findOneAndUpdate({ _id: memberId }, input, { new: true })
       .lean()
