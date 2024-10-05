@@ -127,7 +127,7 @@ memberController.updatePassword = async (
 memberController.updateMember = async (req: ExtendedRequest, res: Response) => {
   try {
     console.log("updateMember");
-
+    console.log("<<<<<<", req.body);
     const input: MemberUpdateInput = req.body;
     if (req.file) input.memberImage = req.file.path.replace(/\\/, "/");
 

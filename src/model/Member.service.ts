@@ -128,7 +128,7 @@ class MemberService {
       .findOne({ memberNick: input.memberNick })
       .exec();
 
-    if (memberNick.memberNick !== member.memberNick) {
+    if (memberNick && memberNick.memberNick !== member.memberNick) {
       throw new Errors(HttpCode.FORBIDDEN, Message.TAKEN_NICK);
     }
     const result = this.memberModel
