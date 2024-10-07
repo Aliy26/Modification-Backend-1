@@ -56,7 +56,7 @@ orderController.updateOrder = async (req: ExtendedRequest, res: Response) => {
         await sendOrderConfirmation({
           to: req.member.memberEmail,
           subject: "Order Confirmation",
-          html: `<h1>Dear ${req.member.memberNick}, ${emailMessage} ${req.member.memberAddress}`,
+          html: `<h1>Dear ${req.member.memberNick}, ${emailMessage} ${req.member.memberAddress}🫡`,
         });
       } catch (err) {
         console.error("Failed to send order confirmation email:", err);

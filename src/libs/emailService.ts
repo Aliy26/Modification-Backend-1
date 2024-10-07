@@ -19,7 +19,7 @@ export const sendOrderConfirmation = async (
 ): Promise<void> => {
   try {
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: `The Gatorade Shop ${process.env.EMAIL_USER}`,
       to: options.to,
       subject: options.subject,
       html: options.html,
