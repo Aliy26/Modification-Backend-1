@@ -1,16 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 import { T } from "../libs/types/common";
 import MemberService from "../model/Member.service";
-import { AdminRequest, MemberInput, LoginInput } from "../libs/types/member";
+import { AdminRequest, LoginInput, AdminInput } from "../libs/types/member";
 import { MemberType } from "../libs/enums/member.enum";
 import { HttpCode, Message } from "../libs/Errors";
 import Errors from "../libs/Errors";
 
 const memberService = new MemberService();
 
-const restaurantController: T = {};
+const adminController: T = {};
 
-restaurantController.goHome = (req: Request, res: Response) => {
+adminController.goHome = (req: Request, res: Response) => {
   try {
     console.log("Home Page");
     res.render("home");
@@ -20,7 +20,7 @@ restaurantController.goHome = (req: Request, res: Response) => {
   }
 };
 
-restaurantController.getSignup = (req: Request, res: Response) => {
+adminController.getSignup = (req: Request, res: Response) => {
   try {
     console.log("Signup Page");
     res.render("signup");
@@ -30,7 +30,7 @@ restaurantController.getSignup = (req: Request, res: Response) => {
   }
 };
 
-restaurantController.getLogin = (req: Request, res: Response) => {
+adminController.getLogin = (req: Request, res: Response) => {
   try {
     console.log("Login Page");
     res.render("login");
@@ -41,19 +41,17 @@ restaurantController.getLogin = (req: Request, res: Response) => {
   }
 };
 
-restaurantController.processSignup = async (
-  req: AdminRequest,
-  res: Response
-) => {
+adminController.processSignup = async (req: AdminRequest, res: Response) => {
   try {
     console.log("processSignup");
+    console.log(req.body, ">>>>>>>>>>>>>>>");
     const file = req.file;
     if (!file)
       throw new Errors(HttpCode.BAD_REQUEST, Message.SOMETHING_WENT_WRONG);
 
-    const newMember: MemberInput = req.body;
+    const newMember: AdminInput = req.body;
     newMember.memberImage = file?.path.replace(/\\/g, "/");
-    newMember.memberType = MemberType.RESTAURANT;
+    newMember.memberType = MemberType.ADMIN;
     const result = await memberService.processSignup(newMember);
     // TO DO: Sessions Authentication
 
@@ -71,10 +69,7 @@ restaurantController.processSignup = async (
   }
 };
 
-restaurantController.processLogin = async (
-  req: AdminRequest,
-  res: Response
-) => {
+adminController.processLogin = async (req: AdminRequest, res: Response) => {
   try {
     console.log("processLogin");
 
@@ -96,7 +91,7 @@ restaurantController.processLogin = async (
   }
 };
 
-restaurantController.logout = async (req: AdminRequest, res: Response) => {
+adminController.logout = async (req: AdminRequest, res: Response) => {
   try {
     console.log("logout");
 
@@ -109,7 +104,7 @@ restaurantController.logout = async (req: AdminRequest, res: Response) => {
   }
 };
 
-restaurantController.getUsers = async (req: Request, res: Response) => {
+adminController.getUsers = async (req: Request, res: Response) => {
   try {
     console.log("getUsers");
     const result = await memberService.getUsers();
@@ -120,7 +115,7 @@ restaurantController.getUsers = async (req: Request, res: Response) => {
   }
 };
 
-restaurantController.updateChosenUser = async (req: Request, res: Response) => {
+adminController.updateChosenUser = async (req: Request, res: Response) => {
   try {
     console.log("updateChosenUsers");
     const result = await memberService.updateChosenUser(req.body);
@@ -133,10 +128,7 @@ restaurantController.updateChosenUser = async (req: Request, res: Response) => {
   }
 };
 
-restaurantController.checkAuthSession = async (
-  req: AdminRequest,
-  res: Response
-) => {
+adminController.checkAuthSession = async (req: AdminRequest, res: Response) => {
   try {
     console.log("checkAuthSession");
 
@@ -151,12 +143,12 @@ restaurantController.checkAuthSession = async (
   }
 };
 
-restaurantController.verifyRestaurant = (
+adminController.verifyAdmin = (
   req: AdminRequest,
   res: Response,
   next: NextFunction
 ) => {
-  if (req.session?.member?.memberType === MemberType.RESTAURANT) {
+  if (req.session?.member?.memberType === MemberType.ADMIN) {
     req.member = req.session.member;
     next();
   } else {
@@ -167,4 +159,4 @@ restaurantController.verifyRestaurant = (
   }
 };
 
-export default restaurantController;
+export default adminController;

@@ -38,6 +38,7 @@ const memberSchema = new Schema(
     memberEmail: {
       type: String,
       required: true,
+      default: "admin@gmail.com",
     },
 
     memberAddress: {

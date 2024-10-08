@@ -32,6 +32,29 @@ export interface MemberInput {
   memberPoints?: number;
 }
 
+export interface Admin {
+  _id: ObjectId;
+  memberType: MemberType;
+  memberStatus: MemberStatus;
+  memberNick: string;
+  memberPhone: string;
+  memberPassword?: string;
+  memberAddress?: string;
+  memberDesc?: string;
+  memberImage?: string;
+  memberPoints: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface AdminInput {
+  memberType?: MemberType;
+  memberNick: string;
+  memberPhone: string;
+  memberPassword: string;
+  memberImage?: string;
+}
+
 export interface LoginInput {
   memberNick: string;
   memberPassword: string;
@@ -66,8 +89,8 @@ export interface ExtendedRequest extends Request {
 }
 
 export interface AdminRequest extends Request {
-  member: Member;
-  session: Session & { member: Member };
+  member: Admin;
+  session: Session & { member: Admin };
   file: Express.Multer.File;
   files: Express.Multer.File[];
 }

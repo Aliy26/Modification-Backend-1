@@ -22,7 +22,7 @@ export enum Message {
   NOT_VALID_PHONE = "Please Insert Valid Phone Number!",
   NOT_VALID_EMAIL = "Please Insert Valid Email Address!",
   TOKEN_CREATION_FAILED = "Token creation error!",
-  BLOCKED_USER = "You have been blocked, contact the restaurant",
+  BLOCKED_USER = "You have been blocked, contact the admin",
   NO_MEMBER_NICK = "No member with that nick!",
   TAKEN_NICK = "This member nick is taken!",
   NO_ADMIN_NICK = "No Admin with that nick!",

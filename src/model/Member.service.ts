@@ -6,6 +6,8 @@ import {
   MemberUpdateInput,
   UpdatePassword,
   UpdateEmail,
+  AdminInput,
+  Admin,
 } from "../libs/types/member";
 import Errors from "../libs/Errors";
 import { HttpCode, Message } from "../libs/Errors";
@@ -27,10 +29,9 @@ class MemberService {
 
   public async getRestaurant(): Promise<Member> {
     const result = await this.memberModel
-      .findOne({ memberType: MemberType.RESTAURANT })
+      .findOne({ memberType: MemberType.ADMIN })
       .lean()
       .exec();
-    result.target = "Test";
 
     if (!result) throw new Errors(HttpCode.NOT_FOUND, Message.NO_DATA_FOUND);
 
@@ -61,6 +62,7 @@ class MemberService {
         { memberNick: 1, memberPassword: 1, memberStatus: 1 }
       )
       .exec();
+
     if (!member) throw new Errors(HttpCode.NOT_FOUND, Message.NO_MEMBER_NICK);
     else if (member.memberStatus === MemberStatus.BLOCK) {
       throw new Errors(HttpCode.FORBIDDEN, Message.BLOCKED_USER);
@@ -234,9 +236,9 @@ class MemberService {
 
   //* SSR */
 
-  public async processSignup(input: MemberInput): Promise<Member> {
+  public async processSignup(input: AdminInput): Promise<Admin> {
     const exsit = await this.memberModel
-      .findOne({ memberType: MemberType.RESTAURANT })
+      .findOne({ memberType: MemberType.ADMIN })
       .exec();
 
     if (exsit) throw new Errors(HttpCode.BAD_REQUEST, Message.CREATE_FAILED);
@@ -257,7 +259,7 @@ class MemberService {
   public async processLogin(input: LoginInput): Promise<Member> {
     const member = await this.memberModel
       .findOne(
-        { memberNick: input.memberNick, memberType: MemberType.RESTAURANT },
+        { memberNick: input.memberNick, memberType: MemberType.ADMIN },
         { memberNick: 1, memberPassword: 1 }
       )
       .exec();

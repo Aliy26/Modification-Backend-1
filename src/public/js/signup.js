@@ -48,7 +48,7 @@ function validateSignupForm() {
     ? $(".member-image").get(0).files[0].name
     : null;
   if (!memberImage) {
-    alert("Please insert restaurant image");
+    alert("Please insert admin image");
     return false;
   }
 }

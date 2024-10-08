@@ -37,7 +37,7 @@
   font-family: monospace;
 }
 
-.products-container .restaurant-menu-frame {
+.products-container .admin-menu-frame {
   position: relative;
   padding-bottom: 80px;
   width: 100%;
@@ -48,7 +48,7 @@
   align-items: center;
 }
 
-.products-container .restaurant-menu-frame .board {
+.products-container .admin-menu-frame .board {
   position: relative;
   margin-top: 100px;
   width: 1320px;
