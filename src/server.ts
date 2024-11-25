@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 import mongoose from "mongoose";
-import app from "./app";
+import server from "./app";
 import "./libs/cron";
 
 mongoose
@@ -9,7 +9,7 @@ mongoose
   .then((data) => {
     console.log("Successfully connected to MongoDB");
     const PORT = process.env.PORT ?? 3003;
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.info(
         `The server is running successfully running on port: ${PORT}`
       );
