@@ -10,3 +10,20 @@ function delayHelloWorld(str: string): void {
 }
 
 delayHelloWorld("Hello World");
+
+/* 
+
+pm2 ls
+pm2 start dist/server.js --name=GATORADE
+pm2 start npm run start:prod --name=GATORADE
+pm2 stop id
+pm2 delete id
+pm2 restart 0
+pm2 monit
+pm2 kill -> insta drops all sessions
+ 
+frontEnd
+
+pm2 start yarn --name REACT --interpreter cmd -- start:prod
+
+*/
