@@ -39,7 +39,7 @@ class ProductService {
   public async getProducts(inquiry: ProductInquiry): Promise<Product[]> {
     const match: T = {
       productStatus: ProductStatus.PROCESS,
-      productLeftCount: { $ne: 0 },
+      productLeftCount: { $gt: 0 },
     };
 
     if (inquiry.productCollection)
